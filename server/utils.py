@@ -39,9 +39,13 @@ def create_standard_json_response(api_identifier, api_method, status, response, 
         json_response = json.dumps({'service': api_identifier,'method': api_method,'status': status,'response':response})
     return unicode(json_response, "utf-8")
 
-def add_standard_json_html_response_headers(response):
-    response.content_type = 'application/json; charset=utf-8'
+def add_standard_html_response_headers(response):
     response.headers.add('Via', 'SwiftGateway/%s Werkzeug/%s Python/%s' % (versions['swiftgateway'], versions['werkzeug'], versions['python']))
+
+def add_standard_json_html_response_headers(response):
+    add_standard_html_response_headers(response)
+    response.content_type = 'application/json; charset=utf-8'
+    
 
 def is_oauth_request(request):
     if not 'Authorization' in request.headers :

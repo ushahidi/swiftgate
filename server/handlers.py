@@ -1,25 +1,16 @@
-from urllib2 import HTTPErrorProcessor
-from urllib2 import URLError
 from werkzeug.wrappers import Response
 from server import views
 from server import mappers
-from domain.utils import get_api_method_wrapper_by_url_pattern
-from urllib2 import urlopen, URLError, HTTPError
+from urllib2 import urlopen, HTTPError
 
-def generic_error_handler(request, error_code):
+def generic_error_handler(request, error_code, error_message):
+    #TODO: Pass the error_message to the view
     error_view_name = "error_" + error_code
     error_view = getattr(views, error_view_name)
-    return error_view(request)
+    return error_view(request, error_message)
 
-def generic_api_request_handler(request, api_wrapper):
+def generic_api_request_handler(request, api_method_wrapper):
     """Maps and formats the incoming request and calls the underlying API service"""
-
-    #us the util function to extract the correct APIMethodWrapper for the request path
-    api_method_wrapper = get_api_method_wrapper_by_url_pattern(request.path, api_wrapper)
-
-    #if no element found then retutn bad request
-    if api_method_wrapper is None:
-        return generic_error_handler(request, "400")
 
     #get the mapper function for this path
     mapper = getattr(mappers, api_method_wrapper.mapper)
@@ -36,7 +27,7 @@ def generic_api_request_handler(request, api_wrapper):
 
         #use the view to render the response
         return view(response)
-    except HTTPError, e:
+    except HTTPError:
         #TODO: This needs to be converted into a SwiftGateway error
         pass
 
