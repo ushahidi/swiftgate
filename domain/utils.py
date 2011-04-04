@@ -9,6 +9,19 @@ con = Connection()
 def get_api_wrapper_by_identifier(identifier):
     return con.APIWrapper.find_one({'url_identifier':identifier})
 
+def get_api_wrapper_by_id(id):
+    return con.APIWrapper.find_one({'_id':ObjectId(id)})
+
+def get_api_wrapper_by_free_text_search(search):
+    rule = re.compile(search, re.IGNORECASE)
+    api_wrappers = {}
+    for wrapper in con.APIWrapper.fetch({"display_name": rule}):
+        api_wrappers[wrapper.url_identifier] = wrapper
+    for wrapper in con.APIWrapper.fetch({"description": rule}):
+        if not wrapper.url_identifier in api_wrappers.keys():
+            api_wrappers[wrapper.url_identifier] = wrapper
+    return api_wrappers.values()
+
 def get_api_method_wrapper_by_url_pattern(path, api_wrapper):
     path = re.sub(api_wrapper.url_identifier, '', path.lstrip('/').rstrip('/'))
     for element in api_wrapper.api_methods:
@@ -43,11 +56,11 @@ def get_un_authenticated_rate_abuser_by_host(host):
 # Validation functions for APIWrapper objects and properties                   #
 ################################################################################
 def validate_apiwrapper_urlidentifier(value):
-    rule = re.compile(r'^\w{4,10}$', re.IGNORECASE)
-    if bool(rule.match(value)):
-        return True
-    else:
-        raise ValidationError('%s must contain only letters and between 4 and 10 characters')
+    if value.islower():
+        rule = re.compile(r'^\w{4,10}/V\d\.\d$', re.IGNORECASE)
+        if bool(rule.match(value)):
+            return True
+    raise ValidationError('%s must contain only lowercase letters and between 4 and 10 characters and cotain a version switch (eg: /V1.0')
 
 def validate_api_wrapper_requesthandler(value):
     rule = re.compile(r'^\w{4,50}$', re.IGNORECASE)

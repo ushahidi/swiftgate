@@ -19,19 +19,19 @@ class Server(object):
         local.application = self
         request = Request(environ)
 
+        #Check for XSS atacks that contain none word chars
+        xss_atack_rule = re.compile("^[\w\d\=\%/\.]+$", re.IGNORECASE)
+        if not bool(xss_atack_rule.match(request.path)):
+            #TODO: this should be logged as a possible attack
+            response = generic_error_handler(request, '400', 'Humm, it looks like you are trying a XSS attack? If not, make sure you are encoding your request url.')
+            return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
+
         #extract the service identifier from the path
         service_identifier = map_path_to_api_wrapper_identifier(request.path)
 
         #Disallow access to the root
         if service_identifier is None:
             response = generic_error_handler(request, '403', 'Access to the root is not permitted')
-            return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
-
-        #Check for XSS atacks that contain none word chars
-        xss_atack_rule = re.compile("^\w+$", re.IGNORECASE)
-        if not bool(xss_atack_rule.match(service_identifier)):
-            #TODO: this should be logged as a possible attack
-            response = generic_error_handler(request, '400', 'Humm, it looks like you are trying a XSS attack? If not, make sure you are encoding your request url.')
             return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
 
         #Get the API Wrapper from the datastore

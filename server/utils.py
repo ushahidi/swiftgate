@@ -26,9 +26,10 @@ class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
 def map_path_to_api_wrapper_identifier(path):
     if path == None or len(path) < 1 or unicode(path) == u'/':
         return None
-    identifier = path.lstrip('/').split('/')[0]
-    if identifier == None :
+    identifier_parts = path.lstrip('/').split('/')
+    if len(identifier_parts) < 2:
         return None
+    identifier = "%s/%s" % (identifier_parts[0], identifier_parts[1])
     return unicode(identifier)
 
 def create_standard_json_response(api_identifier, api_method, status, response, response_is_json=True):

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+        {% block head %}{% endblock %}
+        <title>{% block title %}{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    </head>
+    <body>
+        <div class="{% block pageclass %}{% endblock %}">
+            <div id="header">
+                {% block header %}{% endblock %}
+            </div>
+            <div id="page">
+                {% block page %}{% endblock %}
+            </div>
+            <div id="footer">
+                {% block footer %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

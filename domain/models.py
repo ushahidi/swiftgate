@@ -174,3 +174,26 @@ class UnAuthenticatedRateAbuser(Document):
         {'fields': 'host', 'unique': True,}
     ]
 
+################################################################################
+# AUTHENTICATED USER OBJECTS                                                   #
+################################################################################
+@con.register
+class OauthCredentials(object):
+    """ Code facing object designed to offer dot access to dict properties """
+    def __init__(self, values):
+        self.key = values['key'] if 'key' in values else None
+        self.secret = values['secret'] if 'secret' in values else None
+
+@con.register
+class OauthCredentials_CustomType(CustomType):
+    """ MongoDB facing object used to offer dot access to dict properties """
+    mongo_type = dict
+    python_type = OauthCredentials
+
+    def to_bson(self, value):
+        return value.__dict__
+
+    def to_python(self, value):
+        return OAuthCredentials(value)
+
+

@@ -1,0 +1,9 @@
+{% extends "admin/adminmaster.html" %}
+{% block page %}
+<div class="section">
+    <h3>Add, change and remove services offered through the Gateway</h3>
+    <div class="action clearfix">
+        {{ macros.search_for_service(errors=service_search_errors) }}
+    </div>
+</div>
+{% endblock %}
