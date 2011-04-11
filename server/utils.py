@@ -1,4 +1,5 @@
 from werkzeug.local import Local, LocalManager
+from oauth2 import Request
 import simplejson as json
 import urllib2
 import re
@@ -54,3 +55,15 @@ def is_oauth_request(request):
     oauth_rule = re.compile(r'^oauth', re.IGNORECASE)
     authorization = request.headers['Authorization'].strip()
     return bool(oauth_rule.match(authorization))
+
+def extract_oauth_consumer_key_from_auth_header_string(auth_header_string):
+    if not auth_header_string:
+        return None
+    items = urllib2.parse_http_list(auth_header_string)
+    opts = urllib2.parse_keqv_list(items)
+    if not 'oauth_consumer_key' in opts:
+        return None
+    return opts['oauth_consumer_key']
+
+def build_oauth_request_from_request(method, url, auth_header):
+    return Request.from_request(method, url, auth_header)

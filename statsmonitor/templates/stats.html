@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Usage Stats for the Swift Gateway</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  </head>
+  <body>
+    {% for stat in stats.keys() %}
+        <h1>{{ stat }}</h1>
+        {% for method in stats[stat].keys() %}
+            <h2>{{ method }} :Total: {{ stats[stat][method]['total'] }}</h2>
+            {% for year in stats[stat][method]['years'] %}
+                <h3>{{ year }} :Total: {{ stats[stat][method]['years'][year]['total']}}</h3>
+                <ul>
+                    {% for month in stats[stat][method]['years'][year]['months'] %}
+                        <li>{{ year }}-{{ month }} :Total: {{stats[stat][method]['years'][year]['months'][month]['total'] }}</li>
+                        <ul>
+                            {% for day in stats[stat][method]['years'][year]['months'][month]['days'] %}
+                                <li>{{ year }}-{{ month }}-{{ day }} :Total {{ stats[stat][method]['years'][year]['months'][month]['days'][day]['total'] }}</li>
+                                <ul>
+                                    {% for hour in stats[stat][method]['years'][year]['months'][month]['days'][day]['hours'] %}
+                                        <li>{{ year }}-{{ month }}-{{ day }} @ {{ hour }} hours :Total {{ stats[stat][method]['years'][year]['months'][month]['days'][day]['hours'][hour]['total'] }}</li>
+                                        <ul>
+                                            {% for minute in stats[stat][method]['years'][year]['months'][month]['days'][day]['hours'][hour]['minutes'] %}
+                                                <li>{{ year }}-{{ month }}-{{ day }} @ {{ hour }}:{{ minute }}  :Total {{ stats[stat][method]['years'][year]['months'][month]['days'][day]['hours'][hour]['minutes'][minute]['total'] }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+  </body>
+</html>

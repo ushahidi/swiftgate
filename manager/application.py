@@ -2,7 +2,10 @@ from flask import Flask, current_app, render_template, redirect, request, url_fo
 from flaskext.principal import Principal, Permission, RoleNeed, Identity, identity_changed
 from flaskext.principal import identity_loaded
 from admin.formvalidation import validate_search_for_service_form
+from admin.formvalidation import validate_change_rate_limit
 from domain.utils import get_api_wrapper_by_free_text_search
+from domain.utils import get_api_wrapper_by_id
+from domain.utils import get_api_usage_statistics_by_api_wrapper_id
 from domain.models import *
 
 app = Flask(__name__)
@@ -34,9 +37,13 @@ def logout():
 
 
 @app.route('/services', methods=['POST'])
-@app.route('/services/<id>', methods=['POST'])
-def admin_services(id=None):
+def admin_services():
     if request.method == 'POST':
+        if 'serviceid' in request.form :
+            service_id = request.form.get('serviceid')
+            service = get_api_wrapper_by_id(service_id)
+            service_stats = get_api_usage_statistics_by_api_wrapper_id(service_id)
+
         if 'search-for-service' in request.form:
             passed, errors = validate_search_for_service_form(request.form)
             if not passed:
@@ -46,7 +53,17 @@ def admin_services(id=None):
             if not len(services):
                 return render_template(request.form.get('returnto'), service_search_errors=["Sorry, we didn't find any services with names like '%s'" % search])
             return render_template("admin/servicelist.html", services=services)
-        else:
+        elif 'view-service' in request.form:
+            return render_template('admin/service.html', service=service, service_stats=service_stats)
+        elif 'change-open-access-rate-limit' in request.form :
+            passed, errors = validate_change_rate_limit(request.form)
+            if not passed:
+                return render_template(
+                    "admin/service.html",
+                    change_open_access_rate_limit_errors={request.form['methodid']:errors},
+                    service=service,
+                    service_stats=service_stats,
+                    ratelimit=request.form['ratelimit'])
             #TODO handel save service
             pass
     else:

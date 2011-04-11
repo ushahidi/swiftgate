@@ -1,8 +1,5 @@
 from werkzeug import serving
 from werkzeug.debug import DebuggedApplication
-from manager.application import app
-
-run = ''
 
 # Make and run the server
 def make_server():
@@ -10,11 +7,9 @@ def make_server():
     return Server()
 
 
-if run == 'server':
+if __name__ == '__main__':
     server = make_server()
     server = DebuggedApplication(server, evalex=True)
     serving.run_simple('0.0.0.0', 5000, server, use_debugger=True, use_reloader=True)
-else:
-    app.run(debug=True)
 
 

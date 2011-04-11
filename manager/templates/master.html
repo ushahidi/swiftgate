@@ -3,6 +3,12 @@
     <head>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+        <script type="text/javascript" language="javascript">
+            var baseUrl = "{{ url_for('index') }}";
+        </script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.keyfilter.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
         {% block head %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">

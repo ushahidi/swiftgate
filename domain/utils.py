@@ -1,7 +1,9 @@
 from mongokit import *
+from configuration.configuration import config
 import re
 
-con = Connection()
+
+con = Connection(config['mongodb']['host'], config['mongodb']['port'])
 
 ################################################################################
 # Utility functions to acees APIWrapper objects and properties                 #
@@ -50,6 +52,20 @@ def get_un_authenticated_rate_abuser_by_host(host):
     new_rate_abuser.save()
     return new_rate_abuser
 
+def get_authenticated_user_app_by_key(key):
+    return con.AuthenticatedUser.find_one({"apps.key":key})
+
+################################################################################
+# Utility functions to acees APIUsageStatisticsobjects and properties          #
+################################################################################
+def get_api_usage_statistics_by_api_wrapper_id(id):
+    statistics = con.APIUsageStatistics.find_one({"api_wrapper_id":id})
+    if not statistics is None:
+        return statistics
+    statistics = con.APIUsageStatistics()
+    statistics.api_wrapper_id = id
+    statistics.save()
+    return statistics
 
 
 ################################################################################

@@ -26,6 +26,10 @@ class Map_path_to_api_wrapper_identifier_tests(unittest.TestCase):
         result = map_path_to_api_wrapper_identifier('/')
         self.assertTrue(result == None)
 
+    def test_passwithnoslashed(self):
+        result = map_path_to_api_wrapper_identifier('tagger')
+        self.assertEqual(result, "tagger")
+
 
 
 

@@ -22,7 +22,12 @@
                 <tr>
                     <td>{{ service.display_name }}</td>
                     <td>{{ service.description }}</td>
-                    <td>Action</td>
+                    <td>
+                        <form action="{{ url_for('admin_services') }}" method="POST">
+                            <input type="hidden" name="serviceid" value="{{ service._id }}" />
+                            <input type="submit" name="view-service" value="View this service" />
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

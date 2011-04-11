@@ -178,22 +178,70 @@ class UnAuthenticatedRateAbuser(Document):
 # AUTHENTICATED USER OBJECTS                                                   #
 ################################################################################
 @con.register
-class OauthCredentials(object):
+class AuthenticatedUserApp(object):
     """ Code facing object designed to offer dot access to dict properties """
     def __init__(self, values):
         self.key = values['key'] if 'key' in values else None
         self.secret = values['secret'] if 'secret' in values else None
 
 @con.register
-class OauthCredentials_CustomType(CustomType):
+class AuthenticatedUserApp_CustomType(CustomType):
     """ MongoDB facing object used to offer dot access to dict properties """
     mongo_type = dict
-    python_type = OauthCredentials
+    python_type = AuthenticatedUserApp
 
     def to_bson(self, value):
         return value.__dict__
 
     def to_python(self, value):
-        return OAuthCredentials(value)
+        return AuthenticatedUserApp(value)
 
+@con.register
+class AuthenticatedUser(Document):
+
+    #The MongoDB collection to store these object in
+    __collection__ = 'un_authenticated_rate_abusers'
+
+    #The database used for all objects in this project
+    __database__ = 'swift_gateway'
+
+    #Allow access to properties via dot notation
+    use_dot_notation = True
+
+    #The JSON structure of this object
+    structure = {
+        'username':unicode,
+        'apps':[AuthenticatedUserApp_CustomType()],
+    }
+
+    #Indices
+    indexes = [
+        {'fields': 'username', 'unique': True,}
+    ]
+
+
+################################################################################
+# SERVICE USER STATISTICS                                                      #
+################################################################################
+@con.register
+class APIUsageStatistics(Document):
+    #The MongoDB collection to store these object in
+    __collection__ = 'api_usage_statistics'
+
+    #The database used for all objects in this project
+    __database__ = 'swift_gateway'
+
+    #Allow access to properties via dot notation
+    use_dot_notation = True
+
+    #The JSON structure of this object
+    structure = {
+        'api_wrapper_id':unicode,
+        'methods': dict
+    }
+
+    #Indices
+    indexes = [
+        {'fields': 'api_wrapper_id', 'unique': True,}
+    ]
 

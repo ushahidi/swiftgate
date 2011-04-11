@@ -20,7 +20,7 @@ class Server(object):
         request = Request(environ)
 
         #Check for XSS atacks that contain none word chars
-        xss_atack_rule = re.compile("^[\w\d\=\%/\.]+$", re.IGNORECASE)
+        xss_atack_rule = re.compile("^[\w\d\=\%/.]+$", re.IGNORECASE)
         if not bool(xss_atack_rule.match(request.path)):
             #TODO: this should be logged as a possible attack
             response = generic_error_handler(request, '400', 'Humm, it looks like you are trying a XSS attack? If not, make sure you are encoding your request url.')
@@ -70,10 +70,10 @@ class Server(object):
         #Try to match build the mapper
         handler = getattr(handlers, api_wrapper.request_handler)
 
-        try:
-            response = handler(request, api_method_wrapper)
-        except URLError :
+        #try:
+        response = handler(request, api_method_wrapper)
+        #except URLError :
             #TODO this needs to be handled as this means there is an error in our endpoint mapping or a service is down!
-            pass
+            #pass
 
         return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
