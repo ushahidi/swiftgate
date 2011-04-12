@@ -27,7 +27,8 @@ def generic_api_request_handler(request, api_method_wrapper):
 
         #use the view to render the response
         return view(response)
-    except HTTPError:
+
+    except HTTPError, e:
         #TODO: This needs to be converted into a SwiftGateway error
         pass
 

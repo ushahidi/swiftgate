@@ -3,7 +3,7 @@ from configuration.configuration import config
 import re
 
 
-con = Connection(config['mongodb']['host'], config['mongodb']['port'])
+con = Connection(config.get('mongodb', 'host'), config.getint('mongodb', 'port'))
 
 ################################################################################
 # Utility functions to acees APIWrapper objects and properties                 #

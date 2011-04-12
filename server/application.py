@@ -26,6 +26,12 @@ class Server(object):
             response = generic_error_handler(request, '400', 'Humm, it looks like you are trying a XSS attack? If not, make sure you are encoding your request url.')
             return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
 
+        #Check for malformed query strings in the request
+        mal_formed_query_rule = re.compile(r'.+(=\?|=&).+')
+        if bool(mal_formed_query_rule.match(request.query_string)):
+            response = generic_error_handler(request, '400', 'Humm, it looks like your request contains some illegal character sequances (something like "=&" or "=?").')
+            return ClosingIterator(response(environ, start_response), [local_manager.cleanup])
+
         #extract the service identifier from the path
         service_identifier = map_path_to_api_wrapper_identifier(request.path)
 
