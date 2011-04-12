@@ -1,6 +1,6 @@
 from werkzeug.local import Local, LocalManager
 from oauth2 import Request
-import simplejson as json
+import json
 import urllib2
 import re
 
