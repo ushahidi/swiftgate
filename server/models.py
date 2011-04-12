@@ -111,7 +111,7 @@ class RequestUser(object):
             return return_data
 
         #pull the un_authenticed_user from the datastore
-        user = get_un_authenticated_user_by_host(unicode(self._request.host))
+        user = get_un_authenticated_user_by_host(unicode(self._request.remote_addr))
 
         #extract any existing user statistics for this service and method
         candidate_usage_statistics = filter(
@@ -189,7 +189,7 @@ class RequestUser(object):
         method_identifier = api_method_wrapper.method_identifier
 
         #get the rate abuser object
-        rate_abuser = get_un_authenticated_rate_abuser_by_host(self._request.host)
+        rate_abuser = get_un_authenticated_rate_abuser_by_host(self._request.remote_addr)
 
         candidate_abuse_statistics = filter(
             lambda x:
