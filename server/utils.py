@@ -1,8 +1,12 @@
 from werkzeug.local import Local, LocalManager
+from configuration.configuration import config
 from oauth2 import Request
 import json
 import urllib2
 import re
+import logging
+import logging.handlers
+
 
 #Basic wgis setup
 local = Local()
@@ -17,6 +21,15 @@ versions = {
     "swiftgateway":"0.1",
     "silcc":"0.1",
 }
+
+#server logging
+baselogging_filename = config.get('baselogging', 'filename')
+baselogger = logging.getLogger('baselogger')
+formatter = logging.Formatter('%(created)f, %(name)s, %(levelname)s, %(module)s, %(funcName)s, %(lineno)s, %(message)s')
+logging_handler = logging.handlers.TimedRotatingFileHandler(baselogging_filename, when='d', interval=1, backupCount=30, encoding=None, delay=False, utc=False)
+logging_handler.setFormatter(formatter)
+baselogger.addHandler(logging_handler)
+
 
 class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
     def http_error_default(self, req, fp, code, msg, headers):
@@ -41,6 +54,13 @@ def create_standard_json_response(api_identifier, api_method, status, response, 
         json_response = json.dumps({'service': api_identifier,'method': api_method,'status': status,'response':response})
     return unicode(json_response, "utf-8")
 
+def add_error_html_response_headers(response):
+    response.headers.add('Server', 'SwiftGateway/%s Werkzeug/%s Python/%s' % (versions['swiftgateway'], versions['werkzeug'], versions['python']))
+
+def add_503_error_html_response_headers(response):
+    add_error_html_response_headers(response)
+    response.headers.add("Retry-After", "60")
+
 def add_standard_html_response_headers(response):
     response.headers.add('Via', 'SwiftGateway/%s Werkzeug/%s Python/%s' % (versions['swiftgateway'], versions['werkzeug'], versions['python']))
 
@@ -48,13 +68,16 @@ def add_standard_json_html_response_headers(response):
     add_standard_html_response_headers(response)
     response.content_type = 'application/json; charset=utf-8'
     
-
 def is_oauth_request(request):
-    if not 'Authorization' in request.headers :
-        return False
-    oauth_rule = re.compile(r'^oauth', re.IGNORECASE)
-    authorization = request.headers['Authorization'].strip()
-    return bool(oauth_rule.match(authorization))
+    oauth_request = False
+    if 'Authorization' in request.headers :
+        oauth_rule = re.compile(r'^oauth', re.IGNORECASE)
+        authorization = request.headers['Authorization'].strip()
+        oauth_request = bool(oauth_rule.match(authorization))
+    if 'oauth_consumer_key' in request.args.keys():
+        oauth_request = True
+    return oauth_request
+
 
 def extract_oauth_consumer_key_from_auth_header_string(auth_header_string):
     if not auth_header_string:
@@ -67,3 +90,17 @@ def extract_oauth_consumer_key_from_auth_header_string(auth_header_string):
 
 def build_oauth_request_from_request(method, url, auth_header):
     return Request.from_request(method, url, auth_header)
+
+def safe_save_usage_statistics_stage_two(usage_statistics):
+    try:
+        usage_statistics.save_stage_two()
+    except:# Error, e:
+        #baselogger.error(e)
+        baselogger.error("USAGE STATISTICS REPLAY, \"%s\"" % usage_statistics.sql_dump())
+
+def safe_save_usage_statistics_stage_one(usage_statistics):
+    try:
+        usage_statistics.save_stage_one()
+    except:# Error, e:
+        #baselogger.error(e)
+        baselogger.error("USAGE STATISTICS REPLAY, \"%s\"" % usage_statistics.sql_dump())

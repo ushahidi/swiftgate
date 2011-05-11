@@ -1,38 +1,45 @@
 from werkzeug.wrappers import Response
 from server.utils import create_standard_json_response
 from server.utils import add_standard_json_html_response_headers
-from server.utils import add_standard_html_response_headers
+from server.utils import add_503_error_html_response_headers
+from server.utils import add_error_html_response_headers
 from server.utils import versions
 import re
 
 def error_400(request, error_message):
     response = Response('Bad Request: ' + error_message)
     response.status_code = 400
-    add_standard_html_response_headers(response)
+    add_error_html_response_headers(response)
     return response
 
 def error_401(request, error_message):
     response = Response('Unauthorized: ' + error_message)
     response.status_code = 401
-    add_standard_html_response_headers(response)
+    add_error_html_response_headers(response)
     return response
 
 def error_404(request, error_message):
     response = Response('Not Found: ' + error_message)
     response.status_code = 404
-    add_standard_html_response_headers(response)
+    add_error_html_response_headers(response)
     return response
 
 def error_403(request, error_message):
     response = Response('Forbidden: ' + error_message)
     response.status_code = 403
-    add_standard_html_response_headers(response)
+    add_error_html_response_headers(response)
     return response
 
 def error_405(request, error_message):
     response = Response('Method Not Allowed: ' + error_message)
     response.status_code = 405
-    add_standard_html_response_headers(response)
+    add_error_html_response_headers(response)
+    return response
+
+def error_503(request, error_message):
+    response = Response('Unavailable: ' + error_message)
+    response.status_code = 503
+    add_503_error_html_response_headers(response)
     return response
 
 def silcc_tag_view(api_response):

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+        <script type="text/javascript" language="javascript">
+            var baseUrl = "{{ url_for('index') }}";
+        </script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
+    </head>
+    <body>
+        <div id="page">
+            <div id="main-logo">
+                <h1><span>The Swiftriver Gateway - Your gateway to the power of swiftriver</span></h1>
+            </div>
+            <div class="clearfix">
+                <div id="sign-in">
+                    <h1><span>Sign in with your RiverID</span></h1>
+                    {% if signInErrors %}
+                        <div class="alert errors">
+                            {% for error in signInErrors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form action="{{ url_for('index') }}" method="POST">
+                        <div class="form-row form-row-horizontal clearfix">
+                            <label for="riverid">Your RiverID</label>
+                            <input type="text" name="riverId" value="{{ riverId }}" />
+                        </div>
+                        <div class="form-row form-row-horizontal clearfix">
+                            <label for="riverid">Your Password</label>
+                            <input type="password" name="password" />
+                        </div>
+                        <div class="form-action form-action-single clearfix">
+                            <input type="submit" name="signIn" value="Sign in!" />
+                        </div>
+                    </form>
+                </div>
+                <div id="sign-up">
+                    <h1><span>Want to start using the Swiftriver APIs, Sign up now!</span></h1>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

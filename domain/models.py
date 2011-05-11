@@ -1,9 +1,13 @@
+import time
 from mongokit import *
 from domain.utils import con
 from domain.utils import validate_apiwrapper_urlidentifier
 from domain.utils import validate_generic_dispalyname
 from domain.utils import validate_generic_description
 from domain.utils import validate_api_wrapper_requesthandler
+import MySQLdb
+import md5
+from configuration.configuration import config
 
 ################################################################################
 # API SERVICE OBJECTS                                                          #
@@ -183,6 +187,8 @@ class AuthenticatedUserApp(object):
     def __init__(self, values):
         self.key = values['key'] if 'key' in values else None
         self.secret = values['secret'] if 'secret' in values else None
+        self.name = values['name'] if 'name' in values else None
+        self.subscription_ids = values['subscription_ids'] if 'subscription_ids' in values else []
 
 @con.register
 class AuthenticatedUserApp_CustomType(CustomType):
@@ -200,7 +206,7 @@ class AuthenticatedUserApp_CustomType(CustomType):
 class AuthenticatedUser(Document):
 
     #The MongoDB collection to store these object in
-    __collection__ = 'un_authenticated_rate_abusers'
+    __collection__ = 'authenticated_users'
 
     #The database used for all objects in this project
     __database__ = 'swift_gateway'
@@ -221,12 +227,34 @@ class AuthenticatedUser(Document):
 
 
 ################################################################################
-# SERVICE USER STATISTICS                                                      #
+# PRICE PLANS - The price plans offered                                        #
 ################################################################################
 @con.register
-class APIUsageStatistics(Document):
+class PricePlanRule(object):
+    """ Code facing object designed to offer dot access to dict properties """
+    def __init__(self, values):
+        self.service = values['service'] if 'service' in values else None
+        self.api_method = values['api_method'] if 'api_method' in values else None
+        self.permitted_calls = values['permitted_calls'] if 'permitted_calls' in values else None
+        self.per = values['per'] if 'per' in values else None
+
+@con.register
+class PricePlanRule_CustomType(CustomType):
+    """ MongoDB facing object used to offer dot access to dict properties """
+    mongo_type = dict
+    python_type = PricePlanRule
+
+    def to_bson(self, value):
+        return value.__dict__
+
+    def to_python(self, value):
+        return PricePlanRule(value)
+
+@con.register
+class PricePlan(Document):
+
     #The MongoDB collection to store these object in
-    __collection__ = 'api_usage_statistics'
+    __collection__ = 'price_plans'
 
     #The database used for all objects in this project
     __database__ = 'swift_gateway'
@@ -236,12 +264,121 @@ class APIUsageStatistics(Document):
 
     #The JSON structure of this object
     structure = {
-        'api_wrapper_id':unicode,
-        'methods': dict
+        'name':unicode,
+        'active':bool,
+        'price':float,
+        'rules':[PricePlanRule_CustomType()]
     }
 
-    #Indices
-    indexes = [
-        {'fields': 'api_wrapper_id', 'unique': True,}
-    ]
+################################################################################
+# APP SUBSCRIPTIONS - the subscription properties that are allocated to an app #
+################################################################################
+@con.register
+class Subscription(Document):
+
+    #The MongoDB collection to store these object in
+    __collection__ = 'subscriptions'
+
+    #The database used for all objects in this project
+    __database__ = 'swift_gateway'
+
+    #Allow access to properties via dot notation
+    use_dot_notation = True
+
+    #Allows auto linking back to the price plan
+    use_autorefs = True
+
+    #The JSON structure of this object
+    structure = {
+        'start_date':int,
+        'validity_period':int,
+        'usage_plan':PricePlan,
+        'usage':dict
+    }
+
+
+################################################################################
+# SERVICE USER STATISTICS - Not implemented with Mongo, just plain old sql     #
+################################################################################
+@con.register
+class APIUsageStatistics(dict):
+    def save_stage_one(self):
+        self['save_stage_one'] = True
+        id = md5.md5("%s %d" % (self['remote_ip'], self['start_time'])).hexdigest()
+        if not 'state' in self:
+            self['state'] = 'none'
+        if 'service_id' in self and 'method_id' in self and 'app_id' in self:
+            sql = "INSERT INTO requests_current VALUES('%s','%s','%s','%s','%s','%s','%s',%f,NULL)" % (
+                id,
+                self['state'],
+                self['remote_ip'],
+                self['service_id'],
+                self['app_id'],
+                self['method_id'],
+                self['service_name'],
+                self['start_time'])
+        elif 'service_id' in self and 'method_id' in self:
+            sql = "INSERT INTO requests_current VALUES('%s','%s','%s',NULL,'%s','%s','%s',%f,NULL)" % (
+                id,
+                self['state'],
+                self['remote_ip'],
+                self['service_id'],
+                self['method_id'],
+                self['service_name'],
+                self['start_time'])
+        elif 'service_id' in self:
+            sql = "INSERT INTO requests_current VALUES('%s','%s','%s',NULL,'%s',NULL,'%s',%f,NULL)" % (
+                id,
+                self['state'],
+                self['remote_ip'],
+                self['service_id'],
+                self['service_name'],
+                self['start_time'])
+        else:
+            sql = "INSERT INTO requests_current VALUES('%s','%s','%s',NULL,NULL,NULL,NULL,%f,NULL)" % (
+                id,
+                self['state'],
+                self['remote_ip'],
+                self['start_time'])
+        self['sql_stage_one'] = sql
+        con = MySQLdb.connect(
+            host=config.get('mysql', 'host'),
+            user=config.get('mysql', 'user'),
+            passwd=config.get('mysql', 'password'),
+            db=config.get('mysql', 'database'))
+        cur = con.cursor()
+        cur.execute(sql)
+        cur.close()
+        con.close()
+
+    def save_stage_two(self):
+        if 'save_stage_one' not in self:
+            self.save_stage_one()
+        if 'end_time' not in self:
+            self['end_time'] = time.time()
+        id = md5.md5("%s %d" % (self['remote_ip'], self['start_time'])).hexdigest()
+        if 'app_id' in self:
+            sql = "UPDATE requests_current SET app_id = '%s', end_time = '%f' WHERE id = '%s'" % (
+                self['app_id'],
+                self['end_time'],
+                id)
+        else:
+            sql = "UPDATE requests_current SET end_time = '%f' WHERE id = '%s'" % (
+                self['end_time'],
+                id)
+        self['sql_stage_two'] = sql
+        con = MySQLdb.connect(
+            host=config.get('mysql', 'host'),
+            user=config.get('mysql', 'user'),
+            passwd=config.get('mysql', 'password'),
+            db=config.get('mysql', 'database'))
+        cur = con.cursor()
+        cur.execute(sql)
+        cur.close()
+        con.close()
+
+    def sql_dump(self):
+        sql_one = self['sql_stage_one'] if 'sql_stage_one' in self else ''
+        sql_two = self['sql_stage_two'] if 'sql_stage_two' in self else ''
+        return sql_one + " | " + sql_two
 
