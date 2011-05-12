@@ -1,6 +1,7 @@
 from mongokit import *
 from configuration.configuration import config
 import re
+import MySQLdb
 
 
 con = Connection(config.get('mongodb', 'host'), config.getint('mongodb', 'port'))
@@ -120,3 +121,18 @@ def validate_generic_description(value):
     else:
         raise ValidationError('%s must contain only letters, numbers and spaces and between 4 and 256 characters')
 
+################################################################################
+# Utility functions to acees API Usage Statistics - MySQL                      #
+################################################################################
+def get_api_usage_statistics_for_app_id(app_id):
+    sql = "SELECT * FROM requests_current WHERE app_id = '%s' ORDER BY start_time DESC" % app_id
+    con = MySQLdb.connect(
+        host=config.get('mysql', 'host'),
+        user=config.get('mysql', 'user'),
+        passwd=config.get('mysql', 'password'),
+        db=config.get('mysql', 'database'))
+    con.query(sql)
+    db_results = con.store_result()
+    results = db_results.fetch_row(maxrows=0,how=1)
+    con.close()
+    return results

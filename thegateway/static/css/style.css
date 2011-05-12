@@ -3,6 +3,7 @@ p { margin: 5px 0;}
 p em {font-size:90%; }
 
 #page { width:800px; margin: 0 auto; }
+#header { width:800px; margin: 0 auto; }
 
 .alert { font-weight:normal; margin:20px; padding:10px; }
 .errors { background-color:#FC0; border:2px solid #C00; }
@@ -12,7 +13,7 @@ p em {font-size:90%; }
 .form-triple li { float:left; width: 30%; margin-left:2%; }
 .form-triple li input { width:100%; }
 
-.form-row, .form-action { width:100%; padding:10px;}
+.form-row, .form-action { padding:10px;}
 .form-row-horizontal label { display:inline-block; width:35%; float:left; padding:5px;}
 .form-row-horizontal input { display:inline-block; width:55%; float:right; padding:5px;}
 .form-row-horizontal select { display:inline-block; width:55%; float:right; padding:5px;}
@@ -33,6 +34,19 @@ p em {font-size:90%; }
 #sign-in { margin: 20px 0; width:350px; float:left; padding:20px; background-color:#EEE; border:1px solid;}
 #sign-up { margin: 20px 0; width:350px; float:right; padding:20px; background-color:#EEE; border:1px solid;}
 
+/* Special rules for the Home page template */
+
+#logout { width: 100px; float:right; }
+#logout input { padding:5px; width:100%; }
+
 /* Special rules for the account home page */
-#add-app-more-details table {width:100%;}
-#add-app-more-details table td { padding:10px; width:50%; }
+.home td.key { width:200px; }
+.home #user-details { background-color:#EEE; padding:10px; margin:10px; border:1px solid #000; }
+.home #apps { background-color:#EEE; padding:10px; margin:10px; border:1px solid #000; }
+.home #apps .app { background-color:#DDD; padding:10px; margin:10px; border:1px solid #000; }
+.home #apps .app table { width:100%; }
+.home #apps .app table td { padding:5px }
+.home #add-app { background-color:#EEE; padding:10px; margin:10px; border:1px solid #000; }
+.home #add-app table { width:100%; margin:20px; }
+.home #add-app table td { width:50%; padding:10px;}
+

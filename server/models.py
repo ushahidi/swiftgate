@@ -168,6 +168,8 @@ class RequestUser(object):
         #oauth_server.timestamp_threshold = 500000
 
         auth_header = {}
+        key = None
+        
         if 'Authorization' in self._request.headers:
             auth_header = {'Authorization':self._request.headers['Authorization']}
             key = extract_oauth_consumer_key_from_auth_header_string(auth_header['Authorization'])
@@ -189,8 +191,6 @@ class RequestUser(object):
             return_data.access_message = "Sorry, we didn't find an oauth_consumer_key in the Authorization header of your request"
             return return_data
 
-        usage_statistics['app_id'] = key
-        
         user = get_authenticated_user_app_by_key(key)
         
         if user is None:
@@ -200,6 +200,8 @@ class RequestUser(object):
             return return_data
 
         user_app = filter(lambda x: x.key == key, user.apps)[0]
+
+        usage_statistics['app_id'] = user_app.key
 
         try:
             oauth_server.verify_request(req, user_app, None)

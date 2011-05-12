@@ -54,10 +54,3 @@ function AddAppChoosePricePlanButtonClick()
     $('#add-app-more-details-button').slideUp();
     $('#add-app-more-details').slideDown()
 }
-
-function RevealAppSecret()
-{
-    $('#app-secret-action').slideUp(function(){
-        $('#app-secret').slideDown();
-    });
-}

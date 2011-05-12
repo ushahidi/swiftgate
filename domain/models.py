@@ -312,8 +312,8 @@ class APIUsageStatistics(dict):
                 id,
                 self['state'],
                 self['remote_ip'],
-                self['service_id'],
                 self['app_id'],
+                self['service_id'],
                 self['method_id'],
                 self['service_name'],
                 self['start_time'])
