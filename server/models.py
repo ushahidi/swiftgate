@@ -1,3 +1,13 @@
+__author__ = "Matthew Kidza-Griffiths"
+__copyright__ = "Copyright 2007, Swiftly.org"
+__credits__ = ["Matthew Kidza-Griffiths", "Jon Gosier"]
+__license__ = "LGPL"
+__version__ = "0.0.1"
+__maintainer__ = "Matthew Kidza-Griffiths"
+__email__ = "mg@swiftly.org"
+__status__ = "Development"
+
+
 import oauth2
 from domain.models import APIUsageWrapper, APIRateAbuse
 from server.utils import is_oauth_request
@@ -209,13 +219,13 @@ class RequestUser(object):
             return_data = RecordAPIAccessReturn()
             return_data.access_status = 'denied'
             return_data.access_message = "%s" % e
-            baselogger.error("OAUTH REQUEST DENIED, \"%s\"" % return_data.access_message)
+            baselogger.error("OAUTH REQUEST DENIED, |%s|" % return_data.access_message)
             return return_data
         except KeyError, e:
             return_data = RecordAPIAccessReturn()
             return_data.access_status = 'denied'
             return_data.access_message = "You failed to supply the necessary parameters (%s) to properly authenticate." % e
-            baselogger.error("OAUTH REQUEST DENIED, \"%s\"" % return_data.access_message)
+            baselogger.error("OAUTH REQUEST DENIED, |%s|" % return_data.access_message)
             return return_data
 
         #get the service identifier for this request

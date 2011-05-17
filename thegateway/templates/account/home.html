@@ -1,8 +1,8 @@
 {% extends "account/master.html" %}
 {% block pageclass %}home{% endblock %}
 {% block page %}
-<div id="user-details">
-    <h1><span>Your User Details</span></h1>
+<div id="user-details" class="section">
+    <img src="{{ url_for('static', filename='images/header-userdetails.png') }}" />
     <table>
         <tr>
             <td class="key">Your RiverID:</td>
@@ -11,46 +11,116 @@
         </tr>
     </table>
 </div>
-<div id="apps">
+<div id="add-app" class="section">
+    <img src="{{ url_for('static', filename='images/header-addapp.png') }}" />
+    <div class="expandable">
+        <div class="expandable-inner">
+            {% if addAppErrors %}
+                <div class="alert errors">
+                    {% for error in addAppErrors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form action="{{ url_for('user_home') }}" method="post">
+                <div class="form-row form-row-horizontal clearfix">
+                    <label for="appName">App Name</label>
+                    <input type="text" name="appName" value="{{ appName }}" />
+                </div>
+                <div class="form-row form-row-horizontal clearfix">
+                    <label for="appTemplate">Type of App</label>
+                    <select id="appTemplateSelect" name="appTemplate" onchange="AppTemplateOnChange()">
+                        <option value="0">Select one</option>
+                        <option value="tagger/1" {{ 'selected' if appTemplate == 'tagger/1' else 'none' }}>Tagging based app</option>
+                    </select>
+                </div>
+                <div id="app-template-descriptions">
+                    <div id="tagger_1" style="display:{{ 'block' if appTemplate == 'tagger/1' else 'none' }}">
+                        <div class="alert info">
+                            <p>
+                                Tagging based apps can call the Switriver Tagger API
+                                with chunks of text. The API which will scan the text
+                                looking for likely keywords and return these to your
+                                app as a collection of Tags.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="add-app-more-details-button" class="form-action form-action-single clearfix" style="display:{{ 'none' if appTemplate else 'block' }}">
+                    <input type="button" value="Choose Access Limits and Price Plan" onclick="AddAppChoosePricePlanButtonClick()" />
+                </div>
+                <div id="add-app-more-details" style="display:{{ 'block' if appTemplate else 'none' }}">
+                    <table>
+                        <tr>
+                            <td>
+                                <h2 id="free-access"><span>Free Access</span></h2>
+                                <input type="radio" name="pricePlan" value="free" {{ 'checked' if not pricePlan or pricePlan == 'free' else '' }}> Choose free access</input>
+                            </td>
+                            <td>
+                                <h2 id="more-price-plans-soon"><span>More price plans coming soon</span></h2>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="form-action form-action-single clearfix">
+                        <input type="submit" value="Sign this app up" name="add-app" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="apps" class="section">
     {% if user.apps %}
         <div id="app-title">
-            <h1><span>You Swiftriver Apps</span></h1>
+            <img src="{{ url_for('static', filename='images/header-yourapps.png') }}" />
             <p>Here are all your current Swiftriver Apps:</p>
         </div>
         {% for app in user.apps %}
             <div class="app">
-                <h2><span>App Details</span></h2>
-                <table>
-                    <tr>
-                        <td class="key">App Name:</td>
-                        <td class="value">{{ app.name }}</td>
-                        <td class="more"></td>
-                    </tr>
-                    <tr>
-                        <td class="key">App ID:</td>
-                        <td class="value">{{ app.key }}</td>
-                        <td class="more"></td>
-                    </tr>
-                    <tr>
-                        <td class="key">App Secret:</td>
-                        <td class="value">{{ app.secret }}</td>
-                        <td class="more"></td>
-                    </tr>
-                </table>
-                <div class="stats">
-                    <h2>Usage Statistics for this app</h2>
-                    <table>
-                        <tr>
-                            <td class="key">Total Calls:</td>
-                            <td class="value">{{ app_stats[app.key]['total_count'] }}</td>
-                            <td class="more"></td>
-                        </tr>
-                        <tr>
-                            <td class="key">App in use since:</td>
-                            <td class="value">{{ app_stats[app.key]['first_use'] }}</td>
-                            <td class="more"></td>
-                        </tr>
-                    </table>
+                <h3>{{ app.name }}</h3>
+                <div class="expandable">
+                    <div class="expandable-inner">
+                        <img src="{{ url_for('static', filename='images/header-appdetails.png') }}" />
+                        <table>
+                            <tr>
+                                <td class="key">App Name:</td>
+                                <td class="value">{{ app.name }}</td>
+                                <td class="more"></td>
+                            </tr>
+                            <tr>
+                                <td class="key">App ID:</td>
+                                <td class="value">{{ app.key }}</td>
+                                <td class="more"></td>
+                            </tr>
+                            <tr>
+                                <td class="key">App Secret:</td>
+                                <td class="value">{{ app.secret }}</td>
+                                <td class="more"></td>
+                            </tr>
+                        </table>
+                        {% if not app.key in app_stats.keys() or 'no_stats_found' in app_stats[app.key] %}
+                            <div class="no-stats">
+                                <img src="{{ url_for('static', filename='images/header-appstats.png') }}" />
+                                <h3><span>Sorry, no stats were found for this app</span></h3>
+                            </div>
+                        {% else %}
+                            <div class="stats">
+                                <img src="{{ url_for('static', filename='images/header-appstats.png') }}" />
+                                <table>
+                                    <tr>
+                                        <td class="key">Total Calls:</td>
+                                        <td class="value">{{ app_stats[app.key]['total_count'] }}</td>
+                                        <td class="more"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="key">App in use since:</td>
+                                        <td class="value">{{ app_stats[app.key]['first_use'] }}</td>
+                                        <td class="more"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -59,59 +129,5 @@
             <h1><span>You don't have any apps set up yet, why dont you set one up?</span></h1>
         </div>
     {% endif %}
-</div>
-<div id="add-app">
-    <h1><span>Add a new app to your account</span></h1>
-    {% if addAppErrors %}
-        <div class="alert errors">
-            {% for error in addAppErrors %}
-                <p>{{ error }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-    <form action="{{ url_for('user_home') }}" method="post">
-        <div class="form-row form-row-horizontal clearfix">
-            <label for="appName">App Name</label>
-            <input type="text" name="appName" value="{{ appName }}" />
-        </div>
-        <div class="form-row form-row-horizontal clearfix">
-            <label for="appTemplate">Type of App</label>
-            <select id="appTemplateSelect" name="appTemplate" onchange="AppTemplateOnChange()">
-                <option value="0">Select one</option>
-                <option value="tagger/1" {{ 'selected' if appTemplate == 'tagger/1' else 'none' }}>Tagging based app</option>
-            </select>
-        </div>
-        <div id="app-template-descriptions">
-            <div id="tagger_1" style="display:{{ 'block' if appTemplate == 'tagger/1' else 'none' }}">
-                <div class="alert info">
-                    <p>
-                        Tagging based apps can call the Switriver Tagger API
-                        with chunks of text. The API which will scan the text
-                        looking for likely keywords and return these to your
-                        app as a collection of Tags.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div id="add-app-more-details-button" class="form-action form-action-single clearfix" style="display:{{ 'none' if appTemplate else 'block' }}">
-            <input type="button" value="Choose Access Limits and Price Plan" onclick="AddAppChoosePricePlanButtonClick()" />
-        </div>
-        <div id="add-app-more-details" style="display:{{ 'block' if appTemplate else 'none' }}">
-            <table>
-                <tr>
-                    <td>
-                        <h2 id="free-access"><span>Free Access</span></h2>
-                        <input type="radio" name="pricePlan" value="free" {{ 'checked' if not pricePlan or pricePlan == 'free' else '' }}> Choose free access</input>
-                    </td>
-                    <td>
-                        <h2 id="more-price-plans-soon"><span>More price plans coming soon</span></h2>
-                    </td>
-                </tr>
-            </table>
-            <div class="form-action form-action-single clearfix">
-                <input type="submit" value="Sign this app up" name="add-app" />
-            </div>
-        </div>
-    </form>
 </div>
 {% endblock %}

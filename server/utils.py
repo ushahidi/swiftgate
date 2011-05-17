@@ -1,3 +1,13 @@
+__author__ = "Matthew Kidza-Griffiths"
+__copyright__ = "Copyright 2007, Swiftly.org"
+__credits__ = ["Matthew Kidza-Griffiths", "Jon Gosier"]
+__license__ = "LGPL"
+__version__ = "0.0.1"
+__maintainer__ = "Matthew Kidza-Griffiths"
+__email__ = "mg@swiftly.org"
+__status__ = "Development"
+
+
 from werkzeug.local import Local, LocalManager
 from configuration.configuration import config
 from oauth2 import Request
@@ -94,13 +104,13 @@ def build_oauth_request_from_request(method, url, auth_header):
 def safe_save_usage_statistics_stage_two(usage_statistics):
     try:
         usage_statistics.save_stage_two()
-    except:# Error, e:
-        #baselogger.error(e)
-        baselogger.error("USAGE STATISTICS REPLAY, \"%s\"" % usage_statistics.sql_dump())
+    except Exception, e:
+        baselogger.error("USAGE STATISTICS RECORDING ERROR , |%s|" % e)
+        baselogger.error("USAGE STATISTICS REPLAY, |%s|" % usage_statistics.sql_dump())
 
 def safe_save_usage_statistics_stage_one(usage_statistics):
     try:
         usage_statistics.save_stage_one()
-    except:# Error, e:
-        #baselogger.error(e)
-        baselogger.error("USAGE STATISTICS REPLAY, \"%s\"" % usage_statistics.sql_dump())
+    except Exception, e:
+        baselogger.error("USAGE STATISTICS RECORDING ERROR , |%s|" % e)
+        baselogger.error("USAGE STATISTICS REPLAY, |%s|" % usage_statistics.sql_dump())

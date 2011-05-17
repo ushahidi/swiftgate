@@ -7,39 +7,101 @@
             var baseUrl = "{{ url_for('index') }}";
         </script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.corner.js') }}"></script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
     </head>
     <body>
         <div id="page">
             <div id="main-logo">
-                <h1><span>The Swiftriver Gateway - Your gateway to the power of swiftriver</span></h1>
+                <img alt="The Swiftriver Gateway - Your gateway to the power of swiftriver" src="{{ url_for('static', filename='images/banner-frontpage.png') }}" />
+                <!--<h1><span>The Swiftriver Gateway - Your gateway to the power of swiftriver</span></h1>-->
             </div>
             <div class="clearfix">
                 <div id="sign-in">
-                    <h1><span>Sign in with your RiverID</span></h1>
-                    {% if signInErrors %}
-                        <div class="alert errors">
-                            {% for error in signInErrors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
+                    <h1><img src="{{ url_for('static', filename='images/header-signin.png') }}" alt="Sign in with your RiverID" /></h1>
+                    <div class="expandable {{ 'show' if signInErrors else '' }}">
+                        <div class="expandable-inner">
+                            {% if signInErrors %}
+                                <div class="alert errors">
+                                    {% for error in signInErrors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <form action="{{ url_for('index') }}" method="POST">
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <label for="riverid">Your RiverID</label>
+                                    <input type="text" name="riverId" value="{{ riverId }}" />
+                                </div>
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <label for="riverid">Your Password</label>
+                                    <input type="password" name="password" />
+                                </div>
+                                <div class="form-action form-action-single clearfix">
+                                    <input type="submit" name="signIn" value="Sign in!" />
+                                </div>
+                            </form>
                         </div>
-                    {% endif %}
-                    <form action="{{ url_for('index') }}" method="POST">
-                        <div class="form-row form-row-horizontal clearfix">
-                            <label for="riverid">Your RiverID</label>
-                            <input type="text" name="riverId" value="{{ riverId }}" />
-                        </div>
-                        <div class="form-row form-row-horizontal clearfix">
-                            <label for="riverid">Your Password</label>
-                            <input type="password" name="password" />
-                        </div>
-                        <div class="form-action form-action-single clearfix">
-                            <input type="submit" name="signIn" value="Sign in!" />
-                        </div>
-                    </form>
+                    </div>
                 </div>
                 <div id="sign-up">
-                    <h1><span>Want to start using the Swiftriver APIs, Sign up now!</span></h1>
+                    <h1><img src="{{ url_for('static', filename='images/header-signup.png') }}" alt="Want to start using the Swiftriver APIs, Sign up now!" /></h1>
+                    <div class="expandable {{ 'show' if signUpErrors else '' }}">
+                        <div class="expandable-inner">
+                            {% if signUpErrors %}
+                                <div class="alert errors">
+                                    {% for error in signUpErrors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <form action="{{ url_for('index') }}" method="POST">
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <div class="alert info hidden">
+                                        Your RiverID is your username for all swiftriver apps.
+                                        Your RiverID is your gateway to all the wonders of Swiftriver,
+                                        you can use your RiverID to sign into any Swiftriver app.
+                                    </div>
+                                    <label for="riverid">RiverID <a class="open-infobox">?</a></label>
+                                    <input type="text" name="riverId" value="{{ riverId }}" />
+                                </div>
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <label for="riverid">Password</label>
+                                    <input type="password" name="password" />
+                                </div>
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <label for="riverid">Retype Password</label>
+                                    <input type="password" name="password2" />
+                                </div>
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <div class="alert info hidden">
+                                        We ask for you email address because the RiverID system is designed
+                                        to pull together all your personas around the web and all your
+                                        Swiftriver user accounts.
+                                    </div>
+                                    <label for="riverid">Email Address <a class="open-infobox">?</a></label>
+                                    <input type="text" name="emailaddress" value="{{ emailaddress }}" />
+                                </div>
+                                <div class="form-row form-row-vertical clearfix">
+                                    {{ captchas_data['captchas_image']|safe }}
+                                    <!--<a href="{{ captchas_data['captchas_audio'] }}">Read this to me</a>-->
+                                </div>
+                                <div class="form-row form-row-horizontal clearfix">
+                                    <input type="hidden" name="random" value="{{ captchas_data['captchas_random'] }}" />
+                                    <div class="alert info hidden">
+                                        Please type the letters you can see in the picture above into the
+                                        textbox below. If you can't read it, refresh the page to load
+                                        another one.
+                                    </div>
+                                    <label for="captchas_password">Letters you see <a class="open-infobox">?</a></label>
+                                    <input type="password" name="captchas_password" />
+                                </div>
+                                <div class="form-action form-action-single clearfix">
+                                    <input type="submit" name="signUp" value="Sign Up!" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

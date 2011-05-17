@@ -7,8 +7,38 @@ $(document).ready
     {
         //Set up expandable areas
         $(".expandable").each(function(){Expandable($(this))});
+
+        //Set up the more info ?'s
+        $('.open-infobox').each(function(){MoreInfo($(this))});
+
+        $('#sign-in').corner();
+        $('#sign-up').corner();
+        $('.home .section').corner();
+        $('.home .app').corner();
+
+        
     }
 );
+
+function MoreInfo(subject)
+{
+    $(subject).click
+    (
+        function()
+        {
+            $($(subject).parent().parent()).find('.alert').slideDown();
+            $($(subject).parent().parent()).find('.alert').prepend("<a class='close-infobox'>x</a>");
+            $($(subject).parent().parent()).find('.alert .close-infobox').click
+            (
+                function()
+                {
+                    $($(subject).parent().parent()).find('.alert').slideUp();
+                    $($(subject).parent().parent()).find('.alert .close-infobox').remove();
+                }
+            );
+        }
+    )
+}
 
 function Expandable(subject)
 {

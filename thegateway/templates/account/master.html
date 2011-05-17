@@ -8,6 +8,7 @@
         </script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.keyfilter.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.corner.js') }}"></script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
         {% block head %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
@@ -17,6 +18,7 @@
         <div class="{% block pageclass %}{% endblock %}">
             <div id="header" class="clearfix">
                 {% block header %}{% endblock %}
+                <img src="{{ url_for('static', filename='images/banner-header.png') }}" alt="Header image" />
                 <div id="logout">
                     <form action="{{ url_for('index') }}" method="POST">
                         <input type="submit" name="signOut" value="Log Out?" />

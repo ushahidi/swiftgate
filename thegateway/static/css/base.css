@@ -43,6 +43,10 @@ font-weight:normal;
 font-family: inherit;
 }
 
+.hidden {
+    display:none;
+}
+
 /*
 =============================
 float clearing

@@ -4,8 +4,8 @@ import time
 import urllib2
 from urllib2 import URLError
 
-key = u'49fc138064349744dea151a2348d015a29bd6ebde7fb839873776248'
-secret = u'5cc53eaa2d8d2d90590e7434c5e65c4576156f3b29c580941bffd067'
+key = u'833269ea0bd92203045e5ef6d3c9d361c34cd2a74f280371cc3187a9'
+secret = u'11cef6e90a3b0799b3f4071cea9317856f1ebff25020f8c6d9b0c606'
 url = 'http://localhost:5000/tagger/1/tag?text=this+is+a+test'
 
 def build_request(url, method='GET'):
