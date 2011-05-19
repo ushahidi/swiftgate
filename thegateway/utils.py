@@ -123,8 +123,8 @@ class AuthenticationProviders:
 
     class RiverIDAuthenticationProvider(object):
         def authenticate(self, username, password):
-            key = config.get('riveridcredentials', 'oauth_consumer_key')
-            secret = config.get('riveridcredentials', 'oauth_secret')
+            key = config.get('oauthcredentials', 'oauth_consumer_key')
+            secret = config.get('oauthcredentials', 'oauth_secret')
             url = config.get('services', 'river_id') + 'thegateway/validatecredentials'
             values = {
                 'riverid':username,
@@ -173,8 +173,8 @@ class RegistrationProviders:
 
     class RiverIDRegistrationProvider(object):
         def register(self, username, password, emailaddress):
-            key = config.get('riveridcredentials', 'oauth_consumer_key')
-            secret = config.get('riveridcredentials', 'oauth_secret')
+            key = config.get('oauthcredentials', 'oauth_consumer_key')
+            secret = config.get('oauthcredentials', 'oauth_secret')
             url = config.get('services', 'river_id') + 'thegateway/register'
             values = {
                 'riverid':username,

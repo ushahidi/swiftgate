@@ -30,6 +30,7 @@ versions = {
     "swiftriver":"0.5.6",
     "swiftgateway":"0.1",
     "silcc":"0.1",
+    "riverid":"0.1",
 }
 
 #server logging
@@ -56,8 +57,10 @@ def map_path_to_api_wrapper_identifier(path):
     identifier = "%s/%s" % (identifier_parts[0], identifier_parts[1])
     return unicode(identifier)
 
-def create_standard_json_response(api_identifier, api_method, status, response, response_is_json=True):
-    if response_is_json :
+def create_standard_json_response(api_identifier, api_method, status, response=None, response_is_json=True):
+    if response == None:
+        json_response = json.dumps({'service': api_identifier,'method': api_method,'status': status})
+    elif response_is_json :
         response_as_dict = json.loads(response)
         json_response = json.dumps({'service': api_identifier,'method': api_method,'status': status,'response':response_as_dict})
     else :

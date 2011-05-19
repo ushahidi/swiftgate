@@ -82,8 +82,11 @@ def get_authenticated_user_by_id(id):
 ################################################################################
 # Utility functions to price plans and subscritison                            #
 ################################################################################
-def get_all_price_plans_for_app_template(template_name):
-    raw_price_plans = con.PricePlan.fetch({'rules.service':template_name})
+def get_all_price_plans_for_app_template(template_name, group='user'):
+    if group == 'admin':
+        raw_price_plans = con.PricePlan.fetch({'rules.service':template_name})
+    else:
+        raw_price_plans = con.PricePlan.fetch({'rules.service':template_name, 'group':group})
     price_plans = []
     for raw_price_plan in raw_price_plans:
         price_plans.append(con.PricePlan.find_one({'_id':raw_price_plan['_id']}))

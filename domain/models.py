@@ -275,6 +275,7 @@ class PricePlan(Document):
     #The JSON structure of this object
     structure = {
         'name':unicode,
+        'group':unicode,
         'active':bool,
         'price':float,
         'rules':[PricePlanRule_CustomType()]

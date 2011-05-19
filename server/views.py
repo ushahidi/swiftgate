@@ -14,6 +14,7 @@ from server.utils import add_standard_json_html_response_headers
 from server.utils import add_503_error_html_response_headers
 from server.utils import add_error_html_response_headers
 from server.utils import versions
+import json
 import re
 
 def error_400(request, error_message):
@@ -63,4 +64,28 @@ def silcc_tag_view(api_response):
     response = Response(response_json)
     add_standard_json_html_response_headers(response)
     response.headers.add("Server", "SiLCC/%s Swiftriver/%s" % (versions["silcc"], versions["swiftriver"]))
+    return response
+
+def riverid_register_view(api_response):
+    json_string = api_response.read()
+    data = json.loads(json_string)
+    if data['status'] == 'Succeeded':
+        response_json = create_standard_json_response('riverid','register','success')
+    else:
+        response_json = create_standard_json_response('riverid','register','failure', {'errors':data['errors']}, False)
+        response = Response(response_json)
+    add_standard_json_html_response_headers(response)
+    response.headers.add("Server", "RiverID/%s Swiftriver/%s" % (versions["riverid"], versions["swiftriver"]))
+    return response
+
+def riverid_validatecredentials_view(api_response):
+    json_string = api_response.read()
+    data = json.loads(json_string)
+    if data['status'] == 'Succeeded':
+        response_json = create_standard_json_response('riverid','validatecredentials','success')
+    else:
+        response_json = create_standard_json_response('riverid','validatecredentials','failure', {'errors':data['errors']}, False)
+    response = Response(response_json)
+    add_standard_json_html_response_headers(response)
+    response.headers.add("Server", "RiverID/%s Swiftriver/%s" % (versions["riverid"], versions["swiftriver"]))
     return response

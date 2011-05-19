@@ -7,9 +7,11 @@ __maintainer__ = "Matthew Kidza-Griffiths"
 __email__ = "mg@swiftly.org"
 __status__ = "Development"
 
-
-from urllib import quote
+from configuration.configuration import config
+from urllib import quote, urlencode
 from urllib2 import Request
+import oauth2
+import time
 
 def direct_get_request_mapper(request, api_endpoint):
     """
@@ -40,6 +42,37 @@ def direct_get_request_mapper(request, api_endpoint):
 
     #TODO: Add request headers
     return new_request
+
+def post_request_mapper_with_gateway_oauth_credentials(request, api_endpoint):
+    """
+    Method to map the POST parameters from one request on to a new urllib2.request
+    Also add the configured gateway oath credentials and siging
+    """
+
+    key = config.get('oauthcredentials', 'oauth_consumer_key')
+    secret = config.get('oauthcredentials', 'oauth_secret')
+    url = api_endpoint
+
+    values = [(k,v) for k,v in request.values.iteritems()]
+
+    params = {
+        'oauth_timestamp': int(time.time()),
+        'oauth_nonce': None,
+        'oauth_signature_method':'HMAC-SHA1',
+        'oauth_consumer_key':key,
+    }
+    params.update(values)
+    consumer = oauth2.Consumer(key=key,secret=secret)
+    oauth_request = oauth2.Request(method='POST', url=url, parameters=params)
+    signature_method = oauth2.SignatureMethod_HMAC_SHA1()
+    oauth_request.sign_request(signature_method, consumer, None)
+    data = urlencode(values)
+
+    new_request = Request(url, headers=oauth_request.to_header(), data=data)
+
+    #TODO Add request headers
+    return new_request
+
 
 
 
