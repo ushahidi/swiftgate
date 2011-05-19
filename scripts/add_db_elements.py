@@ -65,6 +65,7 @@ con.register([PricePlan, PricePlanRule])
 
 rule = PricePlanRule({
     "service":u'tagger/1',
+    "group":"user",
     "api_method":None,
     "permitted_calls":10,
     "per":3600

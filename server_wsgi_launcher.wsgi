@@ -7,6 +7,10 @@ __maintainer__ = "Matthew Kidza-Griffiths"
 __email__ = "mg@swiftly.org"
 __status__ = "Development"
 
+import sys
+import os
+
+sys.path.append(os.path.dirname(__file__))
 
 from server.application import Server
 

@@ -73,7 +73,7 @@ def riverid_register_view(api_response):
         response_json = create_standard_json_response('riverid','register','success')
     else:
         response_json = create_standard_json_response('riverid','register','failure', {'errors':data['errors']}, False)
-        response = Response(response_json)
+    response = Response(response_json)
     add_standard_json_html_response_headers(response)
     response.headers.add("Server", "RiverID/%s Swiftriver/%s" % (versions["riverid"], versions["swiftriver"]))
     return response
