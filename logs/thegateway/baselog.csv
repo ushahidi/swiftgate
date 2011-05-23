@@ -47,3 +47,7 @@
 1305538448.869000, thegatewaylogger, ERROR, utils, authentication_factory, 88, MockAuthenticationProvider
 1305538453.160000, thegatewaylogger, ERROR, utils, authentication_factory, 86, stage1
 1305538453.160000, thegatewaylogger, ERROR, utils, authentication_factory, 88, MockAuthenticationProvider
+1306139288.293372, thegatewaylogger, ERROR, utils, authenticate, 156, HTTP ERROR, |<urlopen error [Errno 110] Connection timed out>|
+1306139561.911835, thegatewaylogger, ERROR, utils, authenticate, 156, HTTP ERROR, |HTTP Error 404: NOT FOUND|
+1306139920.723303, thegatewaylogger, ERROR, utils, authenticate, 156, HTTP ERROR, |HTTP Error 401: UNAUTHORIZED|
+1306140576.283129, thegatewaylogger, ERROR, utils, authenticate, 156, HTTP ERROR, |HTTP Error 404: NOT FOUND|
