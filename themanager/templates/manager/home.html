@@ -1,0 +1,32 @@
+{% extends "manager/master.html" %}
+{% block pageclass %}home{% endblock %}
+{% block page %}
+<div id="home-manage-services" class="section">
+    <h1>manage services</h1>
+    <div class="section">
+        <h2>manage an existing service</h2>
+        {% if services %}
+            <div id="home-service-list" class="section">
+                <ul>
+                    {% for service in services %}
+                        <li><a href="{{ url_for('service_edit') }}?id={{ service['_id'] }}">{{ service['display_name'] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="alert info">
+                <p class="none">there are no services to show yet</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="section">
+        <h2>configure a new service</h2>
+        <form action="{{ url_for('service_edit') }}" method="GET">
+            <div class="form-row-horizontal clearfix">
+                <label for="add-service">click this button to add a new service to the gateway</label>
+                <input type="submit" value="Add Service" name="add-service" />
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

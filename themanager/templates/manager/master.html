@@ -8,6 +8,7 @@
         </script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.keyfilter.js') }}"></script>
+        <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/jquery.corner.js') }}"></script>
         <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='js/site.js') }}"></script>
         {% block head %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
@@ -15,8 +16,16 @@
     </head>
     <body>
         <div class="{% block pageclass %}{% endblock %}">
-            <div id="header">
+            <div id="header" class="clearfix">
                 {% block header %}{% endblock %}
+                <a href="{{ url_for('gatewaymanager') }}">
+                    <img src="{{ url_for('static', filename='images/banner-header.png') }}" alt="Header image" />
+                </a>
+                <div id="logout">
+                    <form action="{{ url_for('index') }}" method="POST">
+                        <input type="submit" name="signOut" value="Log Out?" />
+                    </form>
+                </div>
             </div>
             <div id="page">
                 {% block page %}{% endblock %}

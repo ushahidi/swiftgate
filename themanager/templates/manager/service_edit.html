@@ -1,0 +1,197 @@
+{% extends "manager/master.html" %}
+{% block pageclass %}home{% endblock %}
+{% block page %}
+<div id="edit-service">
+    <h1 class="section">{{ 'edit service' if service.id else 'add service' }}</h1>
+    <form action="{{ url_for('service_edit') }}" method="POST">
+        <div class="section">
+            <h2>Service Details</h2>
+            {% if 'service_errors' in errors %}
+                <div class="alert errors">
+                    {% for error in errors['service_errors'] %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if 'service_messages' in messages %}
+                <div class="alert info">
+                    {% for message in messages['service_messages'] %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="hidden" name="id" value="{{ service._id }}" />
+            <div class="form-row-vertical clearfix">
+                <label>The display name for the service:</label>
+                <input type="text" name="display_name" value="{{ service.display_name }}" />
+            </div>
+            <div class="form-row-vertical clearfix">
+                <label>The description of this service:</label>
+                <input type="text" name="description" value="{{ service.description }}" />
+            </div>
+            <div class="form-row-vertical clearfix">
+                <label>The url pattern to use to match requests to this service ( eg: tagger/1 ):</label>
+                <input type="text" name="url_identifier" value="{{ service.url_identifier }}" />
+            </div>
+            <div class="form-row-vertical clearfix">
+                <label>The request handler used to process requests to this server</label>
+                <select name="request_handler">
+                    <option value="0">Choose a request handler</option>
+                    {% for h in handlers %}
+                        {% if h == service.request_handler %}
+                            <option value="{{ h }}" selected>{{ h }}</option>
+                        {% else %}
+                            <option value="{{ h }}">{{ h }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-action-double clearfix">
+                <input class="large" type="submit" name="save_service" value="Save this service" />
+                <input class="small" type="submit" name="delete_service" value="Delete this service" />
+            </div>
+        </div>
+        <div class="section">
+            <h2>Service Methods</h2>
+            {% if 'method_messages' in messages %}
+                <div class="alert info">
+                    {% for message in messages['method_messages'] %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if service.api_methods %}
+                {% for method in service.api_methods %}
+                    <div class="section">
+                        {% if 'method_errors_%s' %  method.method_identifier in errors %}
+                            <div class="alert errors">
+                                {% for error in errors['method_errors_%s' %  method.method_identifier] %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <input type="hidden" value="{{ method.method_identifier }}" name="method_identifier_{{ method.method_identifier }}" />
+                        <div class="form-row-horizontal clearfix">
+                            <label>The unique identifier for this method (note that you can not change this)</label>
+                            <input type="text" name="accepted_http_methods_{{ method.method_identifier }}" disabled value="{{ method.method_identifier }}" />
+                        </div>
+                        <div class="expandable {{ 'show' if 'method_errors_%s' % method.method_identifier in errors else '' }}">
+                            <div class="expandable-inner">
+                                <div class="form-row-horizontal clearfix">
+                                    <label>Mapper</label>
+                                    <select name="mapper_{{ method.method_identifier }}">
+                                        <option value="0">Choose a request mapper</option>
+                                        {% for m in mappers %}
+                                            {% if m == method.mapper %}
+                                                <option value="{{ m }}" selected>{{ m }}</option>
+                                            {% else %}
+                                                <option value="{{ m }}">{{ m }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-row-horizontal clearfix">
+                                    <label>Accepted HTTP Methods (separate each with the | character)</label>
+                                    <input type="text" name="accepted_http_methods_{{ method.method_identifier }}" value="{{ method.accepted_http_methods }}" />
+                                </div>
+                                <div class="form-row-horizontal clearfix">
+                                    <label>The pattern used to match urls to this service</label>
+                                    <input type="text" name="url_pattern_{{ method.method_identifier }}" value ="{{ method.url_pattern }}" />
+                                </div>
+                                <div class="form-row-horizontal clearfix">
+                                    <label>The fully qualified url for this service method ( eg: http://opensilcc.com/api/tag )</label>
+                                    <input type="text" name="endpoint_{{ method.method_identifier }}" value="{{ method.endpoint }}" />
+                                </div>
+                                <div class="form-row-horizontal clearfix">
+                                    <label>View function</label>
+                                    <select name="view_{{ method.method_identifier }}">
+                                        <option value="0">Choose a view function</option>
+                                        {% for v in views %}
+                                            {% if v == method.view %}
+                                                <option value="{{ v }}" selected>{{ v }}</option>
+                                            {% else %}
+                                                <option value="{{ v }}">{{ v }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-row-horizontal clearfix">
+                                    <label>The rate limit pre hour for un authenticated calls ( 0 for none )</label>
+                                    <input type="text" name="open_access_calls_per_hour_{{ method.method_identifier }}" value ="{{ method.open_access_calls_per_hour }}" />
+                                </div>
+                                <div class="form-action-double clearfix">
+                                    <input class="large" type="submit" name="save_method_{{ method.method_identifier }}" value="Save this method" />
+                                    <input class="small" type="submit" name="delete_method_{{ method.method_identifier }}" value="Delete this method" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="section">
+                <h2>Add a new method</h2>
+                {% if 'new_method_errors' in errors %}
+                    <div class="alert errors">
+                        {% for error in errors['new_method_errors'] %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="expandable {{ 'show' if 'new_method_errors' in errors else '' }}">
+                    <div class="expandable-inner">
+                        <div class="form-row-horizontal clearfix">
+                            <label>The unique identifier for this method</label>
+                            <input type="text" name="method_identifier" value="{{ form['method_identifier'] }}" />
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>Mapper</label>
+                            <select name="mapper">
+                                <option value="0">Choose a request mapper</option>
+                                {% for m in mappers %}
+                                    {% if m == form['mapper'] %}
+                                        <option value="{{ m }}" selected>{{ m }}</option>
+                                    {% else %}
+                                        <option value="{{ m }}">{{ m }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>Accepted HTTP Methods (separate each with the | character)</label>
+                            <input type="text" name="accepted_http_methods" value="{{ form['accepted_http_methods'] }}" />
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>The pattern used to match urls to this service</label>
+                            <input type="text" name="url_pattern" value ="{{ form['url_pattern'] }}" />
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>The fully qualified url for this service method ( eg: http://opensilcc.com/api/tag )</label>
+                            <input type="text" name="endpoint" value="{{ form['endpoint'] }}" />
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>View function</label>
+                            <select name="view">
+                                <option value="0">Choose a view function</option>
+                                {% for v in views %}
+                                    {% if v == form['view'] %}
+                                        <option value="{{ v }}" selected>{{ v }}</option>
+                                    {% else %}
+                                        <option value="{{ v }}">{{ v }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-row-horizontal clearfix">
+                            <label>The rate limit pre hour for un authenticated calls ( 0 for none )</label>
+                            <input type="text" name="open_access_calls_per_hour" value ="{{ form['open_access_calls_per_hour'] }}" />
+                        </div>
+                        <div class="form-action-single clearfix">
+                            <input type="submit" name="save_new_method" value="Save this method" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

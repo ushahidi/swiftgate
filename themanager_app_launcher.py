@@ -8,3 +8,7 @@ __email__ = "mg@swiftly.org"
 __status__ = "Development"
 
 
+from themanager.application import app
+
+app.run(debug=True)
+
