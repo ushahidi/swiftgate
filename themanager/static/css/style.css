@@ -18,6 +18,7 @@ p em {font-size:90%; }
 .form-row-horizontal label { display:inline-block; width:35%; float:left; padding:5px;}
 .form-row-horizontal input { display:inline-block; width:55%; float:right; padding:5px;}
 .form-row-horizontal select { display:inline-block; width:55%; float:right; padding:5px;}
+.form-row-horizontal textarea { display:inline-block; width:55%; float:right; padding:5px;}
 .form-row-vertical label { display:block; width:100%; margin-bottom:5px;}
 .form-row-vertical input { width:100%; padding:5px;}
 .form-row-vertical select { width:100%; padding:5px;}
@@ -61,4 +62,5 @@ p em {font-size:90%; }
 .home #home-priceplan-list { max-height:200px; overflow:auto; }
 .home #home-priceplan-list li { padding:10px; }
 .home #home-priceplan-list li a { color:black; }
+.home #price-plan-lists { margin-top:10px; max-height:200px; overflow:auto; }
 

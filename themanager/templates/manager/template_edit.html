@@ -1,0 +1,85 @@
+{% extends "manager/master.html" %}
+{% block pageclass %}home{% endblock %}
+{% block page %}
+<div id="edit-template">
+    <h1 class="section">{{ 'edit app template' if template.id else 'add app template' }}</h1>
+    <form action="{{ url_for('apptemplate_edit') }}" method="POST">
+        <input type='hidden' name='id' value='{{ template._id }}' />
+        <div class='section'>
+            {% if errors %}
+                <div class="alert errors">
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class='form-row-horizontal clearfix'>
+                <label>The name of the template:</label>
+                <input type='text' name='name' value='{{ template.name if template.name else form['name'] }}' />
+            </div>
+            <div class='form-row-horizontal clearfix'>
+                <label>The description of the template:</label>
+                <textarea name='description'>{{ template.description if template.description else form['description'] }}</textarea>
+            </div>
+            <div class='form-row-horizontal clearfix'>
+                <label>Is this template active?:</label>
+                <select name='active'>
+                    {% if not template and not form %}
+                        <option value='false'>No its not</option>
+                        <option value='true'>Yes it is</option>
+                    {% else %}
+                        {% if template.active == True or form['active'] == True %}
+                            <option value='false'>No its not</option>
+                            <option value='true' selected>Yes it is</option>
+                        {% else %}
+                            <option value='false' selected>No its not</option>
+                            <option value='true'>Yes it is</option>
+                        {% endif %}
+                    {% endif %}
+                </select>
+            </div>
+            <div class='form-row-horizontal clearfix'>
+                <label>Who has access to this template:</label>
+                <select name='group'>
+                    {% if not template and not form %}
+                        <option value='admin'>Just administrators</option>
+                        <option value='user'>All gateway users</option>
+                    {% else %}
+                        {% if template.group == 'admin' or form['group'] == 'admin' %}
+                            <option value='admin' selected>Just administrators</option>
+                            <option value='user'>All gateway users</option>
+                        {% else %}
+                            <option value='admin'>Just administrators</option>
+                            <option value='user' selected>All gateway users</option>
+                        {% endif %}
+                    {% endif %}
+                </select>
+            </div>
+            <div class='section'>
+                <label>Check the price plans that are associated with this template</label><br/>
+                <div id='price-plan-lists'>
+                    {% for priceplan in all_priceplans %}
+                        {% if priceplan._id in selected_priceplans %}
+                            <input type='checkbox' name='{{ priceplan._id }}' value='yes' checked />{{ priceplan.name }}<br/>
+                        {% else %}
+                            <input type='checkbox' name='{{ priceplan._id }}' value='yes' />{{ priceplan.name }}<br/>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% if template._id %}
+                <div class="form-action-double clearfix">
+                    <input class="large" type="submit" name="save_template" value="Save this template" />
+                    <input class="small" type="submit" name="delete_template" value="Delete this template" />
+                </div>
+            {% else %}
+                <div class="form-action-single clearfix">
+                    <input type="submit" name="save_template" value="Save this service" />
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+{% endblock %}

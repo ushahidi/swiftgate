@@ -51,13 +51,13 @@ class APIWrapper(Document):
 
     #The MongoDB collection to store these object in
     __collection__ = 'api_wrappers'
-    
+
     #The database used for all objects in this project
     __database__ = 'swift_gateway'
 
     #Allow access to properties via dot notation
     use_dot_notation = True
-    
+
     #The JSON structure of this object
     structure = {
         'url_identifier': unicode,
@@ -101,7 +101,7 @@ class APIUsageWrapper:
         self.usage_since = values['usage_since'] if 'usage_since' in values else 0
 
     def __eq__(self, other):
-        return self.service_identifier == other.service_identifier and self.method_identifier == other.method_identifier 
+        return self.service_identifier == other.service_identifier and self.method_identifier == other.method_identifier
 
 @con.register
 class APIUsageWrapper_CustomType(CustomType):
@@ -235,7 +235,6 @@ class AuthenticatedUser(Document):
         {'fields': 'username', 'unique': True,}
     ]
 
-
 ################################################################################
 # PRICE PLANS - The price plans offered                                        #
 ################################################################################
@@ -279,6 +278,33 @@ class PricePlan(Document):
         'active':bool,
         'price':float,
         'rules':[PricePlanRule_CustomType()]
+    }
+
+################################################################################
+# APP TEMPLATES - The templates users can pick from when applying for app ids  #
+################################################################################
+@con.register
+class AppTemplate(Document):
+
+    #The MongoDB collection to store these object in
+    __collection__ = 'app_templates'
+
+    #The database used for all objects in this project
+    __database__ = 'swift_gateway'
+
+    #Allow access to properties via dot notation
+    use_dot_notation = True
+
+    #Allows auto linking back to the price plan
+    use_autorefs = True
+
+    #The JSON structure of this object
+    structure = {
+        'name':unicode,
+        'description':unicode,
+        'group':unicode,
+        'active':bool,
+        'price_plans':[PricePlan]
     }
 
 ################################################################################

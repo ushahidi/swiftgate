@@ -14,6 +14,7 @@ from themanager.utils import validate_edit_service_form
 from themanager.utils import validate_edit_method_form
 from themanager.utils import validate_edit_priceplan_form
 from themanager.utils import validate_edit_rule_form
+from themanager.utils import validate_save_template_form
 from flaskext.principal import Principal, Permission, RoleNeed, Identity, identity_changed
 from flaskext.principal import identity_loaded
 from domain.utils import con
@@ -51,10 +52,12 @@ def index():
 def gatewaymanager():
     services = con.APIWrapper.find()
     priceplans = con.PricePlan.find()
+    app_templates = [template for template in con.AppTemplate.find()]
     return render_template(
         'manager/home.html',
         services=services,
-        priceplans=priceplans)
+        priceplans=priceplans,
+        app_templates=app_templates)
 
 @app.route('/gatewaymanager/editservice', methods=['GET', 'POST'])
 @userPermission.require(http_exception=401)
@@ -261,7 +264,47 @@ def priceplan_edit():
         messages=messages,
         services=services)
 
+@app.route('/gatewaymanager/editapptemplate', methods=['GET', 'POST'])
+@userPermission.require(http_exception=401)
+def apptemplate_edit():
+    all_priceplans = [priceplan for priceplan in con.PricePlan.find({'active':True})]
+    selected_priceplans = []
+    template = {}
+    page_errors = []
+    form = request.form
 
+    if request.method == 'GET':
+        if 'id' in request.args:
+            id = request.args['id']
+            template = con.AppTemplate.find_one({'_id':ObjectId(id)})
+    else:
+        if request.form['id']:
+            id = request.form['id']
+            template = con.AppTemplate.find_one({'_id':ObjectId(id)})
+        else:
+            template = con.AppTemplate()
+        if 'delete_template' in request.form:
+            template.delete()
+            return redirect(url_for('gatewaymanager'))
+        if 'save_template' in request.form:
+            passed, errors = validate_save_template_form(request.form)
+            if passed:
+                template.name= request.form['name']
+                template.description = request.form['description']
+                template.active = True if request.form['active'] == 'true' else False
+                template.group = request.form['group']
+                template.price_plans = [priceplan for priceplan in all_priceplans if unicode(priceplan._id) in request.form]
+                template.save()
+            else:
+                page_errors = errors
+    selected_priceplans = [pp._id for pp in template.price_plans] if template else []
+    return render_template(
+        'manager/template_edit.html',
+        template=template,
+        form=form,
+        all_priceplans=all_priceplans,
+        selected_priceplans=selected_priceplans,
+        errors=page_errors)
 
 
 @identity_loaded.connect_via(app)

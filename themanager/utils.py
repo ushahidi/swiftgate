@@ -116,6 +116,17 @@ def validate_edit_method_form(form, method_id=None):
 
     return True, []
 
+def validate_save_template_form(form):
+    name = form.get('name')
+    description = form.get('description')
+    errors = []
+    if not name: errors.append('You need to supply a name')
+    if not description: errors.append('You need to supply a description')
+    if errors: return False, errors
+    if not bool(re.search(r'^[\w ]+$', name)): errors.append('Name can only be word characters')
+    if not bool(re.search(r'^[\w \.\,]+$', description)): errors.append('Description can only be word characters')
+    if errors: return False, errors
+    return True, []
 
 def authentication_factory():
     class_name = config.get('authenticationprovision', 'authentication_provider')
