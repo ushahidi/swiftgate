@@ -103,6 +103,9 @@ def create_new_subscription(start_time, validity, price_plan):
 def get_subscription_by_id(id):
     return con.Subscription.find_one({'_id':ObjectId(id)})
 
+def get_priceplan_by_id(id):
+    return con.PricePlan.find_one({'_id':ObjectId(id)})
+
 ################################################################################
 # Validation functions for APIWrapper objects and properties                   #
 ################################################################################

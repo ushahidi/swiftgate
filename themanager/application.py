@@ -9,12 +9,17 @@ __status__ = "Development"
 
 
 from flask import Flask, render_template, request, redirect, current_app, url_for, session
-from themanager.utils import validate_signin_form, validate_edit_service_form, validate_edit_method_form
+from themanager.utils import validate_signin_form
+from themanager.utils import validate_edit_service_form
+from themanager.utils import validate_edit_method_form
+from themanager.utils import validate_edit_priceplan_form
+from themanager.utils import validate_edit_rule_form
 from flaskext.principal import Principal, Permission, RoleNeed, Identity, identity_changed
 from flaskext.principal import identity_loaded
 from domain.utils import con
 from domain.utils import get_authenticated_user_by_riverid
 from domain.utils import get_api_wrapper_by_id
+from domain.utils import get_priceplan_by_id
 from domain.models import *
 import server.handlers
 import server.mappers
@@ -45,8 +50,11 @@ def index():
 @userPermission.require(http_exception=401)
 def gatewaymanager():
     services = con.APIWrapper.find()
-
-    return render_template('manager/home.html', services=services)
+    priceplans = con.PricePlan.find()
+    return render_template(
+        'manager/home.html',
+        services=services,
+        priceplans=priceplans)
 
 @app.route('/gatewaymanager/editservice', methods=['GET', 'POST'])
 @userPermission.require(http_exception=401)
@@ -142,11 +150,9 @@ def service_edit():
                                     messages['method_messages'] = ['Method saved']
                                 else:
                                     page_errors['method_errors_%s' %  method_id] = errors
-            if methods and not page_errors:
+            if not page_errors:
                 service.api_methods = methods
                 service.save()
-
-
     return render_template(
         'manager/service_edit.html',
         service=service,
@@ -156,6 +162,106 @@ def service_edit():
         errors=page_errors,
         messages=messages,
         form=form)
+
+@app.route('/gatewaymanager/editpriceplan', methods=['GET', 'POST'])
+@userPermission.require(http_exception=401)
+def priceplan_edit():
+    # Set up the drop down data sources
+    services = {}
+    for service in con.APIWrapper.find(): services[re.sub(r'/', r'_', service.url_identifier)] = service
+
+    priceplan = {}
+    return_form = {}
+    page_errors = {}
+    messages = {}
+
+    if request.method == 'GET':
+        if 'id' in request.args:
+            id = request.args['id']
+            priceplan = get_priceplan_by_id(id)
+    else:
+        if request.form['id']:
+            priceplan_id = request.form['id']
+            priceplan = get_priceplan_by_id(priceplan_id)
+        else:
+            priceplan = con.PricePlan()
+        if 'delete_priceplan' in request.form:
+            priceplan.delete()
+            return redirect(url_for('gatewaymanager'))
+        elif 'save_priceplan' in request.form:
+            passed, errors = validate_edit_priceplan_form(request.form)
+            if passed:
+                priceplan.name = request.form.get('name')
+                priceplan.active = False if request.form['active'] == 'false' else True
+                priceplan.group = request.form['group']
+                priceplan.price = eval(request.form['price'])
+                priceplan.save()
+                messages['priceplan_messages'] = ['Priceplan saved']
+            else:
+                page_errors['priceplan_errors'] = errors
+        elif 'save_new_rule' in request.form:
+            if not request.form['id']:
+                page_errors['new_rule_errors'] = ['You need to save the priceplan before you can add rules']
+            else:
+                passed, errors = validate_edit_rule_form(request.form)
+                if passed:
+                    new_rule = PricePlanRule({
+                        "service":re.sub(r'_', '/', request.form['service']),
+                        "api_method":request.form['api_method'] if not request.form['api_method'] == 'all' else None,
+                        "permitted_calls":float(request.form['permitted_calls']),
+                        "per":86400
+                    })
+                    priceplan.rules.append(new_rule)
+                    priceplan.save()
+                    messages['rule_messages'] = ['New rule added']
+                else:
+                    page_errors['new_rule_errors'] = errors
+                    return_form = request.form
+        else:
+            rules = []
+            counter = -1
+            for rule in priceplan.rules:
+                counter = counter + 1
+                if 'delete_rule_%s' % counter in request.form:
+                    for candidate_rule in priceplan.rules:
+                        if not candidate_rule.service == priceplan.rules[counter].service:
+                            rules.append(candidate_rule)
+                            messages['rule_messages'] = ['Rule deleted']
+
+            if not rules:
+                counter = -1
+                for rule in priceplan.rules:
+                    counter = counter + 1
+                    if 'save_rule_%s' % counter in request.form:
+                        for candidate_rule in priceplan.rules:
+                            if not candidate_rule.service == priceplan.rules[counter].service:
+                                methods.append(candidate_method)
+                            else:
+                                passed, errors = validate_edit_rule_form(request.form, counter)
+                                if passed:
+                                    changed_rule = PricePlanRule({
+                                        "service":re.sub(r'_', '/', request.form['service_%s' % counter]),
+                                        "api_method":request.form['api_method_%s' % counter] if not request.form['api_method_%s' % counter] == 'all' else None,
+                                        "permitted_calls":int(request.form['permitted_calls_%s' % counter]),
+                                        "per":86400
+                                    })
+                                    rules.append(changed_rule)
+                                    messages['rule_messages'] = ['rule saved']
+                                else:
+                                    page_errors['rule_errors_%s' %  counter] = errors
+            if not page_errors:
+                priceplan.rules = rules
+                priceplan.save()
+
+    return render_template(
+        'manager/priceplan_edit.html',
+        priceplan=priceplan,
+        form=return_form,
+        errors=page_errors,
+        messages=messages,
+        services=services)
+
+
 
 
 @identity_loaded.connect_via(app)

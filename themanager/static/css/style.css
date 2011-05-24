@@ -58,4 +58,7 @@ p em {font-size:90%; }
 .home #home-service-list { max-height:200px; overflow:auto; }
 .home #home-service-list li { padding:10px; }
 .home #home-service-list li a { color:black; }
+.home #home-priceplan-list { max-height:200px; overflow:auto; }
+.home #home-priceplan-list li { padding:10px; }
+.home #home-priceplan-list li a { color:black; }
 

@@ -248,6 +248,7 @@ class RequestUser(object):
                     continue
             for rule in subscription.usage_plan.rules:
                 if rule.service == service_identifier:
+                    #rule.api_method set to none means all
                     if not rule.api_method or rule.api_method == method_identifier:
                         method = rule.api_method if rule.api_method else 'all'
                         #get the alloted permited calls from the rule

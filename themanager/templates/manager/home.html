@@ -29,4 +29,32 @@
         </form>
     </div>
 </div>
+<div id="home-manage-priceplans" class="section">
+    <h1>manage price plans</h1>
+    <div class="section">
+        <h2>manage an existing price plan</h2>
+        {% if priceplans %}
+            <div id="home-priceplan-list" class="section">
+                <ul>
+                    {% for priceplan in priceplans %}
+                        <li><a href="{{ url_for('priceplan_edit') }}?id={{ priceplan['_id'] }}">{{ priceplan['name'] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="alert info">
+                <p class="none">there are no priceplans to show yet</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="section">
+        <h2>configure a new price plan</h2>
+        <form action="{{ url_for('priceplan_edit') }}" method="GET">
+            <div class="form-row-horizontal clearfix">
+                <label for="add-priceplan">click this button to add a new price plan to the gateway</label>
+                <input type="submit" value="Add price plan" name="add-priceplan" />
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

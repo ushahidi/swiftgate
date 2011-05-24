@@ -56,6 +56,28 @@ def validate_edit_service_form(form):
 
     return True, []
 
+def validate_edit_priceplan_form(form):
+    name = form.get('name')
+    price = form.get('price')
+
+    errors = []
+    if not name: errors.append('You must choose a name')
+    if not price: errors.append('You must choose a price, even if its 0')
+    if errors: return False, errors
+
+    if not bool(re.search(r'^[A-Za-z\- ]+$', name)): errors.append('The name you choose should only have letters, spaces and hyphens')
+    if not bool(re.search(r'^[0-9]+\.[0-9]{1,2}$', price)): errors.append('The price you enter must be in the form of X.XX')
+    if errors: return False, errors
+
+    return True, []
+
+def validate_edit_rule_form(form, counter=None):
+    calls = form.get('permitted_calls') if counter == None else form.get('permitted_calls_%s' % counter)
+    if not calls: return False, ['You did not specify how many calls per day can be made']
+    if not bool(re.search(r'^[0-9]+$', calls)): return False, ['You can only enter numbers into the permitted cals per day field']
+    return True, []
+
+
 def validate_edit_method_form(form, method_id=None):
     if method_id:
         method_identifier = form.get('method_identifier_%s' % method_id)

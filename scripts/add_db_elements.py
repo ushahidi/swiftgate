@@ -65,7 +65,6 @@ con.register([PricePlan, PricePlanRule])
 
 rule = PricePlanRule({
     "service":u'tagger/1',
-    "group":"user",
     "api_method":None,
     "permitted_calls":10,
     "per":3600
@@ -74,6 +73,7 @@ rule = PricePlanRule({
 p = con.PricePlan()
 p.name = u'Free Access'
 p.active = True
+p.group = u'user'
 p.price = float(0)
 p.rules.append(rule)
 p.save()
