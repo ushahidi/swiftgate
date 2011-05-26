@@ -13,7 +13,7 @@
 </div>
 <div id="add-app" class="section">
     <img src="{{ url_for('static', filename='images/header-addapp.png') }}" />
-    <div class="expandable">
+    <div class="expandable {{ 'show' if addAppErrors }} ">
         <div class="expandable-inner">
             {% if addAppErrors %}
                 <div class="alert errors">
@@ -31,36 +31,36 @@
                     <label for="appTemplate">Type of App</label>
                     <select id="appTemplateSelect" name="appTemplate" onchange="AppTemplateOnChange()">
                         <option value="0">Select one</option>
-                        <option value="tagger/1" {{ 'selected' if appTemplate == 'tagger/1' else 'none' }}>Tagging based app</option>
+                        {% for template_id in app_templates.keys() %}
+                            <option value="{{ template_id }}" {{ 'selected' if appTemplate == template_id else '' }}>{{ app_templates[template_id].name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div id="app-template-descriptions">
-                    <div id="tagger_1" style="display:{{ 'block' if appTemplate == 'tagger/1' else 'none' }}">
-                        <div class="alert info">
-                            <p>
-                                Tagging based apps can call the Switriver Tagger API
-                                with chunks of text. The API which will scan the text
-                                looking for likely keywords and return these to your
-                                app as a collection of Tags.
-                            </p>
+                    {% for template_id in app_templates.keys() %}
+                        <div id="{{ template_id }}" style="display:{{ 'block' if appTemplate == template_id else 'none' }}">
+                            <div class="alert info">
+                                <p>{{ app_templates[template_id].description }}</p>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div id="add-app-more-details-button" class="form-action form-action-single clearfix" style="display:{{ 'none' if appTemplate else 'block' }}">
                     <input type="button" value="Choose Access Limits and Price Plan" onclick="AddAppChoosePricePlanButtonClick()" />
                 </div>
                 <div id="add-app-more-details" style="display:{{ 'block' if appTemplate else 'none' }}">
-                    <table>
-                        <tr>
-                            <td>
-                                <h2 id="free-access"><span>Free Access</span></h2>
-                                <input type="radio" name="pricePlan" value="free" {{ 'checked' if not pricePlan or pricePlan == 'free' else '' }}> Choose free access</input>
-                            </td>
-                            <td>
-                                <h2 id="more-price-plans-soon"><span>More price plans coming soon</span></h2>
-                            </td>
-                        </tr>
-                    </table>
+                    {% for template_id in app_templates.keys() %}
+                        <table id='price_plans_{{ template_id }}' style='display:{{ 'block' if appTemplate == template_id else 'none' }}'>
+                            <tr>
+                                {% for price_plan in app_templates[template_id].price_plans %}
+                                    <td>
+                                        <img src='{{ url_for('static', filename='images') }}/pp_{{ price_plan._id }}.png' />
+                                        <input type='radio' name='priceplan' value='{{ price_plan._id }}' {{ 'selected' if pricePlan == "%s" % price_plan._id }} />{{ price_plan.name }}<br/>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    {% endfor %}
                     <div class="form-action form-action-single clearfix">
                         <input type="submit" value="Sign this app up" name="add-app" />
                     </div>
@@ -89,7 +89,15 @@
                             </tr>
                             <tr>
                                 <td class="key">App ID:</td>
-                                <td class="value">{{ app.key }}</td>
+                                <td class="value">
+                                    {{ app.key }}
+                                    <div class='alert info'>
+                                        <p>
+                                            You use you app key and and app secret to sign
+                                            each API request you make to the gateway. For
+                                            more info, check out this wiki page
+
+                                </td>
                                 <td class="more"></td>
                             </tr>
                             <tr>

@@ -64,23 +64,30 @@ def index():
 @userPermission.require(http_exception=401)
 def user_home():
     user = get_authenticated_user_by_id(session['user_id'])
+    app_templates = {}
+    for template in con.AppTemplate.find():
+        app_templates[unicode(template._id)] = template
     app_stats = {}
     for user_app in user.apps:
         app_id = unicode(user_app.key)
         app_stats[app_id] = build_app_stats_for_app_id(app_id)
     if request.method == 'GET':
-        return render_template("account/home.html", user=user, app_stats=app_stats)
+        return render_template("account/home.html", user=user, app_stats=app_stats, app_templates=app_templates)
     else:
         if 'add-app' in request.form :
             passed, errors = validate_add_app_form(request.form, user)
             if not passed:
-                return render_template("account/home.html", user=user, addAppErrors=errors, appName=request.form.get('appName'), appTemplate=request.form.get('appTemplate'), pricePlan=request.form.get('pricePlan'), app_stats=app_stats)
-            price_plans = get_all_price_plans_for_app_template(request.form.get('appTemplate'))
-
-            #TODO for now we know they have select the free one for now so just hard code it
+                return render_template("account/home.html", user=user, addAppErrors=errors, appName=request.form.get('appName'), appTemplate=request.form.get('appTemplate'), pricePlan=request.form.get('pricePlan'), app_stats=app_stats, app_templates=app_templates)
+            app_template = con.AppTemplate.find_one({'_id':ObjectId(request.form.get('appTemplate'))})
+            price_plan_id = request.form.get('priceplan')
+            price_plans = [price_plan for price_plan in app_template.price_plans if unicode(price_plan._id) == price_plan_id]
+            if not len(price_plans) == 1:
+                return render_template("account/home.html", user=user, addAppErrors=['There was a problem with the price plan you selected, please choose again'], appName=request.form.get('appName'), appTemplate=request.form.get('appTemplate'), pricePlan=request.form.get('pricePlan'), app_stats=app_stats, app_templates=app_templates)
             price_plan = price_plans[0]
-            subscription_id = create_new_subscription(int(time.time()), 0, price_plan)
 
+            #TODO Here we need to add the payment bit
+
+            subscription_id = create_new_subscription(int(time.time()), 0, price_plan)
             user_app_name = request.form.get('appName')
             user_app_key = hashlib.sha224("%s %s" % (unicode(user._id), user_app_name)).hexdigest()
             user_app_secret_seed = "%s %s %s" % (unicode(user._id), user_app_name, time.time())
@@ -94,7 +101,7 @@ def user_home():
             user = get_authenticated_user_by_id(session['user_id'])
             user.apps.append(user_app)
             user.save()
-            return render_template("account/home.html", user=user, app_stats=app_stats)
+            return render_template("account/home.html", user=user, app_stats=app_stats, app_templates=app_templates)
 
 @identity_loaded.connect_via(app)
 def on_identity_loaded(sender, identity):

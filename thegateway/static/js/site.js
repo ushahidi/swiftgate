@@ -16,7 +16,7 @@ $(document).ready
         $('.home .section').corner();
         $('.home .app').corner();
 
-        
+
     }
 );
 
@@ -52,7 +52,7 @@ function Expandable(subject)
         $(subject).prepend("<a class='expandable-trigger'><img src='" + baseUrl + "static/images/icon-expand.png' /></a>");
         $(subject).find("a.expandable-trigger").click(function(){Expand($(this))});
     }
-    
+
 }
 
 function Expand(subject)
@@ -75,8 +75,12 @@ function AppTemplateOnChange()
 {
     var selectedValue = $('#appTemplateSelect').val();
     $('#app-template-descriptions').children().slideUp();
+    $('#add-app-more-details table').children().slideUp();
     if(selectedValue != '0')
+    {
         $('#app-template-descriptions #' + selectedValue.replace('/', '_')).slideDown();
+        $('#add-app-more-details #price_plans_' + selectedValue).slideDown();
+    }
 }
 
 function AddAppChoosePricePlanButtonClick()

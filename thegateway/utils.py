@@ -49,6 +49,8 @@ def validate_add_app_form(form, user):
     for app in user.apps:
         if bool(rule.match(app.name)):
             return False, ['You already have an app with that name, please choose another one']
+    if not form.get('priceplan'):
+        return False, ['You must choose a price plan']
     return True, []
 
 def validate_signup_form(form, captchas):

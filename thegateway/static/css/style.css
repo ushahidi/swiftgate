@@ -60,5 +60,6 @@ p em {font-size:90%; }
 .home #apps .app table td { padding:5px }
 .home #add-app { }
 .home #add-app table { width:100%; margin:20px; }
-.home #add-app table td { width:50%; padding:10px;}
+.home #add-app table td { padding:10px; text-align:center; }
+.home #add-app table td img { display:block; margin:0 auto; width:200px; height:200px; }
 
