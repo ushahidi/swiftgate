@@ -129,7 +129,7 @@ def validate_save_template_form(form):
     return True, []
 
 def authentication_factory():
-    class_name = config.get('authenticationprovision', 'authentication_provider')
+    class_name = config.get('themanager_authenticationprovision', 'authentication_provider')
     authentication_provider = getattr(AuthenticationProviders, class_name)
     return authentication_provider()
 
