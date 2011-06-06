@@ -199,6 +199,7 @@ class AuthenticatedUserApp(object):
         self.secret = values['secret'] if 'secret' in values else None
         self.name = values['name'] if 'name' in values else None
         self.subscription_ids = values['subscription_ids'] if 'subscription_ids' in values else []
+        self.template = values['template'] if 'template' in values else None
 
 @con.register
 class AuthenticatedUserApp_CustomType(CustomType):

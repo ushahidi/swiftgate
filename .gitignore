@@ -3,4 +3,5 @@
 *.pyc
 environment.py
 *.csv
+*_local_wsgi_*
 

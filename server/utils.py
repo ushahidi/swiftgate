@@ -31,6 +31,7 @@ versions = {
     "swiftgateway":"0.1",
     "silcc":"0.1",
     "riverid":"0.1",
+    "swiftmeme":"0.1"
 }
 
 #server logging

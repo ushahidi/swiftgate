@@ -92,11 +92,13 @@ def user_home():
             user_app_key = hashlib.sha224("%s %s" % (unicode(user._id), user_app_name)).hexdigest()
             user_app_secret_seed = "%s %s %s" % (unicode(user._id), user_app_name, time.time())
             user_app_secret = hashlib.sha224(user_app_secret_seed).hexdigest()
+            user_app_template = unicode(app_template._id)
             user_app = AuthenticatedUserApp({
                 "name":user_app_name,
                 "key":user_app_key,
                 "secret":user_app_secret,
-                "subscription_ids":[subscription_id]})
+                "subscription_ids":[subscription_id],
+                "template":user_app_template})
 
             user = get_authenticated_user_by_id(session['user_id'])
             user.apps.append(user_app)

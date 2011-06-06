@@ -12,6 +12,17 @@ from werkzeug.wrappers import Response
 from server import views
 from server import mappers
 from urllib2 import urlopen, HTTPError
+from domain.models import *
+from domain.utils import get_all_price_plans_for_app_template
+from domain.utils import get_authenticated_user_by_id
+from domain.utils import create_new_subscription
+from domain.utils import get_authenticated_user_by_riverid
+from server.mashups.swiftmeme import run_swiftmeme_authentication_adapter
+from server.mashups.swiftmeme import run_swiftmeme_memeoverview_adapter
+import hashlib
+import json
+import time
+import re
 
 def generic_error_handler(request, error_code, error_message):
     #TODO: Pass the error_message to the view
@@ -42,7 +53,19 @@ def generic_api_request_handler(request, api_method_wrapper):
         #TODO: This needs to be converted into a SwiftGateway error
         pass
 
-    return Response(response.read())
+def swiftmeme_request_handler(request, api_method_wrapper):
+    
+    method_id = api_method_wrapper.method_identifier
+    
+    if method_id == "authenticate" or method_id == "register":
+        return run_swiftmeme_authentication_adapter(request, api_method_wrapper)
+    elif method_id == "getmemeoverview":
+        return run_swiftmeme_memeoverview_adapter(request, api_method_wrapper)
+    else:
+        view = getattr(views, "error_404")
+        return view(request, "The method you request is not allowed")
+        
+        
 
 
 
