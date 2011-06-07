@@ -274,7 +274,7 @@ class RequestUser(object):
                                 subscription.usage[service_identifier][method]["calls"] = 1
                                 subscription.usage[service_identifier][method]["since"] = request_time
                                 subscription.save()
-                            elif calls > rate_limit:
+                            elif rate_limit > 0 and calls > rate_limit:
                                 #RATE ABUSE - record the abuse
                                 if 'abuse' in subscription.usage[service_identifier][method]:
                                     subscription.usage[service_identifier][method]["abuse"].append(request_time)

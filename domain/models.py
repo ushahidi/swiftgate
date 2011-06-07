@@ -16,7 +16,7 @@ from domain.utils import validate_generic_dispalyname
 from domain.utils import validate_generic_description
 from domain.utils import validate_api_wrapper_requesthandler
 import MySQLdb
-import md5
+import hashlib
 from configuration.configuration import config
 
 ################################################################################
@@ -342,7 +342,7 @@ class Subscription(Document):
 class APIUsageStatistics(dict):
     def save_stage_one(self):
         self['save_stage_one'] = True
-        id = md5.md5("%s %d" % (self['remote_ip'], self['start_time'])).hexdigest()
+        id = hashlib.sha224("%s %d" % (self['remote_ip'], self['start_time'])).hexdigest()
         if not 'state' in self:
             self['state'] = 'none'
         if 'service_id' in self and 'method_id' in self and 'app_id' in self:

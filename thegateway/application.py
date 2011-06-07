@@ -9,7 +9,8 @@ __status__ = "Development"
 
 
 from flask import Flask, render_template, request, redirect, current_app, url_for, session
-from thegateway.utils import validate_signin_form, validate_add_app_form
+from thegateway.utils import validate_signin_form, validate_add_app_form,\
+    user_is_admin
 from thegateway.utils import build_app_stats_for_app_id
 from thegateway.utils import validate_signup_form
 from flaskext.principal import Principal, Permission, RoleNeed, Identity, identity_changed
@@ -64,9 +65,16 @@ def index():
 @userPermission.require(http_exception=401)
 def user_home():
     user = get_authenticated_user_by_id(session['user_id'])
+    admin_user = user_is_admin(user)
     app_templates = {}
-    for template in con.AppTemplate.find():
-        app_templates[unicode(template._id)] = template
+    
+    if admin_user: 
+        for template in con.AppTemplate.find(): 
+            app_templates[unicode(template._id)] = template
+    else:
+        for template in con.AppTemplate.find({"group":"user"}): 
+            app_templates[unicode(template._id)] = template
+    
     app_stats = {}
     for user_app in user.apps:
         app_id = unicode(user_app.key)

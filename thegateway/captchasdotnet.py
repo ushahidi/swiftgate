@@ -23,9 +23,10 @@
 #---------------------------------------------------------------------
 
 import os
-import md5
+import hashlib
 import random
 import time
+import errno
 
 class CaptchasDotNet:
     def __init__ (self, client, secret,
@@ -210,7 +211,7 @@ class CaptchasDotNet:
         encryption_base = self.__secret + random
         if (password_alphabet != "abcdefghijklmnopqrstuvwxyz") or (password_length != 6):
             encryption_base += ":" + password_alphabet + ":" + str(password_length)
-        digest = md5.new (encryption_base).digest ()
+        digest = hashlib.md5(encryption_base).digest ()
 
         # Compute password
         correct_password = ''

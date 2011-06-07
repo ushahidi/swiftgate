@@ -109,6 +109,9 @@ def get_service_usage_statistics_for_app_id(app_id):
         thegatewaylogger.error("GET API USAGE ERROR, |%s|" % e)
     return results
 
+def user_is_admin(user):
+    return bool(re.search(user.username, config.get('admin', 'accounts')))
+
 def authentication_factory():
     class_name = config.get('authenticationprovision', 'authentication_provider')
     authentication_provider = getattr(AuthenticationProviders, class_name)

@@ -29,8 +29,6 @@ def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
             
             ensure_swiftmeme_apps(user)
             
-            user.save()
-            
             formatted_memes = [{"name":app.name,"id":app.key,"secret":app.secret} for app in get_swiftmeme_apps(user)]
             
             view = getattr(views, api_method_wrapper.view)
@@ -56,9 +54,23 @@ def run_swiftmeme_memeoverview_adapter(request, api_method_wrapper):
 def ensure_swiftmeme_apps(user):
     existing_swiftmeme_apps = get_swiftmeme_apps(user)
             
+    if len(existing_swiftmeme_apps) == 0:
+        apps_to_create = [1, 2, 3]
+    elif len(existing_swiftmeme_apps) < 3:
+        apps_to_create = []
+        if not [app for app in existing_swiftmeme_apps if app.name == 'SwiftMeme Meme 1']:
+            apps_to_create.append(1)
+        if not [app for app in existing_swiftmeme_apps if app.name == 'SwiftMeme Meme 2']:
+            apps_to_create.append(2)
+        if not [app for app in existing_swiftmeme_apps if app.name == 'SwiftMeme Meme 3']:
+            apps_to_create.append(3)
+    else:
+        apps_to_create = []
+        
+    
     #Here we create the swiftemem app ids that are needed for SwiftMeme
-    for x in range(1, 3 - len(existing_swiftmeme_apps)):
-        swiftmeme_price_plans = get_all_price_plans_for_app_template('SwiftMeme')
+    for x in apps_to_create:
+        swiftmeme_price_plans = get_all_price_plans_for_app_template('swiftmeme/1', "admin")
         
         #TODO Here we need to add support for creating paid accounts too
         price_plan = [p for p in swiftmeme_price_plans if bool(re.search(r'free', p.name, re.IGNORECASE))][0]
@@ -69,12 +81,26 @@ def ensure_swiftmeme_apps(user):
         user_app_key = hashlib.sha224("%s %s" % (unicode(user._id), user_app_name)).hexdigest()
         user_app_secret_seed = "%s %s %s" % (unicode(user._id), user_app_name, time.time())
         user_app_secret = hashlib.sha224(user_app_secret_seed).hexdigest()
-        user_app = AuthenticatedUserApp({"name":user_app_name,"key":user_app_key,"secret":user_app_secret,"subscription_ids":[subscription_id]})
+        user_app_template = unicode(con.AppTemplate.find_one({'name':'A SwiftMeme Meme'})._id)
+        user_app = AuthenticatedUserApp({
+            "name":user_app_name,
+            "key":user_app_key,
+            "secret":user_app_secret,
+            "subscription_ids":[subscription_id],
+            "template":user_app_template})
 
         user.apps.append(user_app)
         
+    user.save()
+        
 def get_swiftmeme_apps(user):
-    return [app for app in user.apps if app.template == unicode(con.AppTemplate.find_one({'name':'SwiftMeme'})._id)] 
+    if not len(user.apps):
+        return []
+    subject_template = con.AppTemplate.find_one({'name':'A SwiftMeme Meme'})
+    if not subject_template:
+        return []
+    subject_template_id = unicode(subject_template._id)
+    return [app for app in user.apps if app.template == subject_template_id] 
 
 def get_app_overview(apps):
     return {}
