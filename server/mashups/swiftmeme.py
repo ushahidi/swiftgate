@@ -15,6 +15,8 @@ def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
     
     authorisation_request = mapper(request, api_method_wrapper.endpoint)
     
+    view = getattr(views, api_method_wrapper.view)
+    
     try:
         
         response = urlopen(authorisation_request)
@@ -31,13 +33,11 @@ def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
             
             formatted_memes = [{"name":app.name,"id":app.key,"secret":app.secret} for app in get_swiftmeme_apps(user)]
             
-            view = getattr(views, api_method_wrapper.view)
-            
-            return view('success', {"memes":formatted_memes})
+            return view(api_method_wrapper.method_identifier, 'success', {"memes":formatted_memes})
         
         else:
             
-            return view('failure', {"errors":response_object['errors']})
+            return view(api_method_wrapper.method_identifier, 'failure', {"errors":response_object['errors']})
             
     except HTTPError, e:
         #TODO: This needs to be converted into a SwiftGateway error
@@ -45,7 +45,34 @@ def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
      
 
 def run_swiftmeme_memeoverview_adapter(request, api_method_wrapper):
-    pass
+    #TODO: this is just a mock up at the moment
+    view = getattr(views, api_method_wrapper.view)
+    
+    response_data = {
+        "name":"This would be the name of the meme",
+        "stats":[
+            {
+                "name":"quickstats",
+                "data":{
+                    "posts":4374343,
+                    "sources":767,
+                    "keywords":67,
+                    "channels":3
+                }
+            },
+            {
+                "name":"recentactivity",
+                "data":[
+                    {"date":"2011-06-01","count":50},
+                    {"date":"2011-06-02","count":40},
+                    {"date":"2011-06-03","count":30},
+                    {"date":"2011-06-04","count":50},
+                ] 
+            }
+        ]
+    }
+    
+    return view('success', response_data)
 
 #######################################################################################
 # Supporting functions
@@ -73,7 +100,7 @@ def ensure_swiftmeme_apps(user):
         swiftmeme_price_plans = get_all_price_plans_for_app_template('swiftmeme/1', "admin")
         
         #TODO Here we need to add support for creating paid accounts too
-        price_plan = [p for p in swiftmeme_price_plans if bool(re.search(r'free', p.name, re.IGNORECASE))][0]
+        price_plan = [p for p in swiftmeme_price_plans if p.name == "A SwiftMeme Meme"][0]
         
         subscription_id = create_new_subscription(int(time.time()), 0, price_plan)
         

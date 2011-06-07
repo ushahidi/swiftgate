@@ -27,20 +27,38 @@ def build_request(key, secret, url, method='POST', values={}):
     req.sign_request(signature_method, consumer, None)
     return req
 
-
-key = u'cbdc0b2dfb040772ba0cc6c93189d45a8eb84049f55cbef752c2cc2e'
-secret = u'1dcc5bafe6a425a6f149604745299148f66eb1229e4146aad9b98cf7'
-url = "http://local.swiftgateway.com/swiftmeme/1/authenticate"
-#url = "http://localhost:5000/swiftmeme/1/authenticate"
-values = {
-    'riverid':'test1',
-    'password':'password'
-}
-request = build_request(key, secret, url, values=values)
-data = urllib.urlencode(values)
-try :
-    req = urllib2.Request(url, headers=request.to_header(), data=data)
-    u = urllib2.urlopen(req)
-    print u.read()
-except URLError, e:
-    print e
+def test_authenticate():
+    key = u'4e0ed29e0cb4abf252cb1cbf4d83a95df2318a5bd6f605b91268ecae'
+    secret = u'f84eb46c788966b4b0f412cd8001d75f49a2b79daa9df9b749a045e3'
+    url = "http://local.swiftgateway.com/swiftmeme/1/authenticate"
+    #url = "http://localhost:5000/swiftmeme/1/authenticate"
+    values = {
+        'riverid':'test1',
+        'password':'password',
+    }
+    request = build_request(key, secret, url, values=values)
+    data = urllib.urlencode(values)
+    try :
+        req = urllib2.Request(url, headers=request.to_header(), data=data)
+        u = urllib2.urlopen(req)
+        print u.read()
+    except URLError, e:
+        print e
+        
+def test_get_memeoverview():
+    key = u'e0f0868b2df990c1a802e9ea186f2f8b473aeebdb1ce171122b46157'
+    secret = u'b0f1dfe52ce778646ec095b0e0fec9113fa437b7b3d9b58ac946b6fc'
+    url = "http://local.swiftgateway.com/swiftmeme/1/getmemeoverview"
+    values = {"some":"thing"}
+    request = build_request(key, secret, url, values=values)
+    data = urllib.urlencode(values)
+    try :
+        req = urllib2.Request(url, headers=request.to_header(), data=data)
+        u = urllib2.urlopen(req)
+        print u.read()
+    except URLError, e:
+        print e
+        
+#test_authenticate()
+test_get_memeoverview()
+    

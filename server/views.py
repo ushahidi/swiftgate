@@ -90,8 +90,15 @@ def riverid_validatecredentials_view(api_response):
     response.headers.add("Server", "RiverID/%s Swiftriver/%s" % (versions["riverid"], versions["swiftriver"]))
     return response
 
-def swiftmeme_authentication_view(result, data):
-    response_json = create_standard_json_response("swiftmeme", "registration", result, data, False)
+def swiftmeme_authentication_view(method, result, data):
+    response_json = create_standard_json_response("swiftmeme", method, result, data, False)
+    response = Response(response_json)
+    add_standard_json_html_response_headers(response)
+    response.headers.add("Server", "SwiftMeme/%s Swiftriver/%s" % (versions["swiftmeme"], versions["swiftriver"]))
+    return response
+
+def swiftmeme_memeoverview_view(result, data):
+    response_json = create_standard_json_response("swiftmeme", 'getmemeoverview', result, data, False)
     response = Response(response_json)
     add_standard_json_html_response_headers(response)
     response.headers.add("Server", "SwiftMeme/%s Swiftriver/%s" % (versions["swiftmeme"], versions["swiftriver"]))
