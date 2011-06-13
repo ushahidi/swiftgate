@@ -4,4 +4,5 @@
 environment.py
 *.csv
 *_local_wsgi_*
+*baselog*
 
