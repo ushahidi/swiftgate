@@ -1,12 +1,12 @@
 from server import views
 from server import mappers
 from urllib2 import urlopen, HTTPError
-import json
-from domain.utils import get_authenticated_user_by_riverid,\
-    get_all_price_plans_for_app_template, create_new_subscription, con
+from domain.utils import get_authenticated_user_by_riverid
+from domain.utils import get_all_price_plans_for_app_template, create_new_subscription, con
 import re
 import time
 import hashlib
+import json
 from domain.models import *
 
 def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
@@ -43,7 +43,6 @@ def run_swiftmeme_authentication_adapter(request, api_method_wrapper):
         #TODO: This needs to be converted into a SwiftGateway error
         pass
      
-
 def run_swiftmeme_memeoverview_adapter(request, api_method_wrapper):
     #TODO: this is just a mock up at the moment
     view = getattr(views, api_method_wrapper.view)
@@ -77,6 +76,78 @@ def run_swiftmeme_memeoverview_adapter(request, api_method_wrapper):
 #######################################################################################
 # Supporting functions
 #######################################################################################
+
+def run_swiftmeme_analytics_adapter(request, api_method_wrapper):
+    #TODO: this is just a mock up at the moment
+    view = getattr(views, api_method_wrapper.view)
+    
+    response_data = {
+        "topkeywords": [
+            {
+                "name": "nike",
+                "count": 40
+            },
+            {
+                "name": "fail",
+                "count": 80
+            }
+        ],
+        "topsources": [
+            {
+                "name": "@whiteafrican",
+                "uri": "http://twitter.com/whiteafrican",
+                "count": 20
+            },
+            {
+                "name": "CNN Blogs",
+                "uri": "http://blogs.cnn.com",
+                "count": 30
+            }
+        ],
+        "newkeywords": [
+            {
+                "name": "swiftriver",
+                "count": 80
+            },
+            {
+                "name": "blog",
+                "count": 20
+            }
+        ],
+        "toplocations": [
+            {
+                "name": "Nairobi, Kenya",
+                "country": "ke",
+                "count": 1234,
+                "sentiment": ":)"
+            },
+            {
+                "name": "Mombasa, Kenya",
+                "country": "ke",
+                "count": 234,
+                "sentiment": ":|"
+            },
+            {
+                "name": "Cape Town, South Africa",
+                "country": "za",
+                "count": 123,
+                "sentiment": ":("
+            }
+        ],
+        "channels": [
+            {
+                "name": "Twitter",
+                "count": 3456
+            },
+            {
+                "name": "RSS",
+                "count": 1234
+            }
+        ]
+    }
+    
+    return view('success', response_data)
+    
 
 def ensure_swiftmeme_apps(user):
     existing_swiftmeme_apps = get_swiftmeme_apps(user)

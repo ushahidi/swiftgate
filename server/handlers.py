@@ -19,6 +19,7 @@ from domain.utils import create_new_subscription
 from domain.utils import get_authenticated_user_by_riverid
 from server.mashups.swiftmeme import run_swiftmeme_authentication_adapter
 from server.mashups.swiftmeme import run_swiftmeme_memeoverview_adapter
+from server.mashups.swiftmeme import run_swiftmeme_analytics_adapter
 import hashlib
 import json
 import time
@@ -61,6 +62,8 @@ def swiftmeme_request_handler(request, api_method_wrapper):
         return run_swiftmeme_authentication_adapter(request, api_method_wrapper)
     elif method_id == "getmemeoverview":
         return run_swiftmeme_memeoverview_adapter(request, api_method_wrapper)
+    elif method_id == "getmemeanalytics":
+        return run_swiftmeme_analytics_adapter(request, api_method_wrapper)
     else:
         view = getattr(views, "error_404")
         return view(request, "The method you request is not allowed")
