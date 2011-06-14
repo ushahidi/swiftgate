@@ -110,3 +110,10 @@ def swiftmeme_memeanalytics_view(result, data):
     add_standard_json_html_response_headers(response)
     response.headers.add("Server", "SwiftMeme/%s Swiftriver/%s" % (versions["swiftmeme"], versions["swiftriver"]))
     return response
+
+def swiftmeme_memecontent_view(result, data):
+    response_json = create_standard_json_response("swiftmeme", 'getmemecontent', result, data, False)
+    response = Response(response_json)
+    add_standard_json_html_response_headers(response)
+    response.headers.add("Server", "SwiftMeme/%s Swiftriver/%s" % (versions["swiftmeme"], versions["swiftriver"]))
+    return response

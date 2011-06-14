@@ -94,7 +94,28 @@ def test_get_memeanalytics():
     except URLError, e:
         print e
         
+def test_get_memecontent():
+    #dev
+    key = u'e0f0868b2df990c1a802e9ea186f2f8b473aeebdb1ce171122b46157'
+    secret = u'b0f1dfe52ce778646ec095b0e0fec9113fa437b7b3d9b58ac946b6fc'
+    url = "http://local.swiftgateway.com/swiftmeme/1/getmemecontent"
+    
+    #staging
+    #key = u'c81c3b2fe71266af6a1a74728a5f92e19f3a703346e3c58bf868ffa7'
+    #secret = u'0cee6d7ba8d541fb7b47c5563c524bba2ce6284b079d030feedfbdd7'
+    #url = "http://50.57.68.66/swiftmeme/1/getmemecontent"
+    
+    values = {"some":"thing"}
+    request = build_request(key, secret, url, values=values)
+    data = urllib.urlencode(values)
+    try :
+        req = urllib2.Request(url, headers=request.to_header(), data=data)
+        u = urllib2.urlopen(req)
+        print u.read()
+    except URLError, e:
+        print e
 #test_authenticate()
 #test_get_memeoverview()
-test_get_memeanalytics()
+#test_get_memeanalytics()
+test_get_memecontent()
     
