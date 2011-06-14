@@ -101,9 +101,9 @@ def test_get_memecontent():
     url = "http://local.swiftgateway.com/swiftmeme/1/getmemecontent"
     
     #staging
-    #key = u'c81c3b2fe71266af6a1a74728a5f92e19f3a703346e3c58bf868ffa7'
-    #secret = u'0cee6d7ba8d541fb7b47c5563c524bba2ce6284b079d030feedfbdd7'
-    #url = "http://50.57.68.66/swiftmeme/1/getmemecontent"
+    key = u'c81c3b2fe71266af6a1a74728a5f92e19f3a703346e3c58bf868ffa7'
+    secret = u'0cee6d7ba8d541fb7b47c5563c524bba2ce6284b079d030feedfbdd7'
+    url = "http://50.57.68.66/swiftmeme/1/getmemecontent"
     
     values = {"some":"thing"}
     request = build_request(key, secret, url, values=values)
