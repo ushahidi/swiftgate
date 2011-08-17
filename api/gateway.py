@@ -23,12 +23,12 @@ app = Flask(__name__)
 
 @app.route('/api/<method_name>', methods=['GET', 'POST'])
 def api(method_name):
-    path = '/api'
+    path = '/api/tag'
     
     if '?' in request.url:
         path += '?' + request.url.split('?')[1]
 
-    api = HTTPConnection('silcc.nrny.net', strict=True)
+    api = HTTPConnection('www.opensilcc.com', strict=True)
     api.connect()
     api.request(request.method, path, request.data, request.headers)
     api_response = connection.getresponse()
