@@ -32,9 +32,10 @@ def api(method_name):
     api.connect()
     api.request(request.method, path, request.data)#, dict(request.headers))
     api_response = api.getresponse()
+    api_response_content = api_response.read()
     api.close()
 
-    gateway_response = make_response(api_response.read())
+    gateway_response = make_response(api_response_content)
     gateway_response.status_code = api_response.status
 
 #    for header in api_response.getheaders():
