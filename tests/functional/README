@@ -1,4 +1,0 @@
-The tests in this directory rely on many of the components of the complete
-system being in place.
-
-See the notes in individual test files for a list of prereqs
