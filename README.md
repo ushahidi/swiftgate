@@ -4,10 +4,6 @@
 
 Gateway for API management, rate limiting and billing.
 
-## Documentation
-
-* [API Documentation](https://github.com/ushahidi/gateway/blob/master/doc/api.md)
-
 ## Licenses
 
 * All bundled source code is released under the [GNU Affero General Public License](http://www.gnu.org/licenses/agpl.html).
