@@ -37,8 +37,8 @@ def api(method_name):
     gateway_response = make_response(api_response.read())
     gateway_response.status_code = api_response.status
 
-    for header in api_response.getheaders():
-        gateway_response.headers[header[0]] = header[1]
+#    for header in api_response.getheaders():
+#        gateway_response.headers[header[0]] = header[1]
 
     return gateway_response
 
