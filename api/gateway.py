@@ -40,7 +40,7 @@ def api(method_name):
     for header in api_response.getheaders():
         gateway_response.headers[header[0]] = header[1]
 
-    return response
+    return gateway_response
 
 def main():
     app.debug = True
