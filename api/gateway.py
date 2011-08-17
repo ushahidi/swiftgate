@@ -30,7 +30,7 @@ def api(method_name):
 
     api = HTTPConnection('www.opensilcc.com', strict=True)
     api.connect()
-    api.request(request.method, path, request.data, dict(request.headers))
+    api.request(request.method, path, request.data)#, dict(request.headers))
     api_response = api.getresponse()
     api.close()
 
