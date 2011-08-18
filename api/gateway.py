@@ -24,7 +24,6 @@ app = Flask(__name__)
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
     apis = {'silcc': 'www.opensilcc.com'}
-
     path = '/' + path
 
     if '?' in request.url:
@@ -40,7 +39,7 @@ def api(api_name, path):
     gateway_response = make_response(api_response_content)
     gateway_response.status_code = api_response.status
 
-    for header in ['Content-Type', 'Pragma', 'Cache-Control']:
+    for header in ['Cache-Control', 'Content-Type', 'Pragma']:
         gateway_response.headers[header] = api_response.getheader(header)
 
     return gateway_response
