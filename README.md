@@ -1,4 +1,4 @@
-# Gateway v2.0.0
+# SwiftRiver Gateway v2.0.0
 
 ## Synopsis
 
