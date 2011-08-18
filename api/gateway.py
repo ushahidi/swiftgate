@@ -37,7 +37,9 @@ def api(method_name):
 
     gateway_response = make_response(api_response_content)
     gateway_response.status_code = api_response.status
-    gateway_response.headers['Content-Type'] = api_response.getheader('Content-Type')
+
+    for header in ['Content-Type', 'Pragma', 'Cache-Control']:
+        gateway_response.headers[header] = api_response.getheader(header)
 
     return gateway_response
 
