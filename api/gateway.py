@@ -30,16 +30,14 @@ def api(method_name):
 
     api = HTTPConnection('www.opensilcc.com', strict=True)
     api.connect()
-    api.request(request.method, path, request.data)#, dict(request.headers))
+    api.request(request.method, path, request.data)
     api_response = api.getresponse()
     api_response_content = api_response.read()
     api.close()
 
     gateway_response = make_response(api_response_content)
     gateway_response.status_code = api_response.status
-
-#    for header in api_response.getheaders():
-#        gateway_response.headers[header[0]] = header[1]
+    gateway_response.headers['Content-Type'] = api_response.getheader('Content-Type')
 
     return gateway_response
 
