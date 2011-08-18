@@ -23,6 +23,8 @@ app = Flask(__name__)
 
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
+    path = '/' + path
+    
     if '?' in request.url:
         path += '?' + request.url.split('?')[1]
 
