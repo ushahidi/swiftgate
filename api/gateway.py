@@ -21,10 +21,8 @@ from httplib import HTTPConnection
 
 app = Flask(__name__)
 
-@app.route('/api/<method_name>', methods=['GET', 'POST'])
-def api(method_name):
-    path = '/api/tag'
-    
+@app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
+def api(api_name, path):
     if '?' in request.url:
         path += '?' + request.url.split('?')[1]
 
