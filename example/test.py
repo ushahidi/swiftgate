@@ -1,4 +1,4 @@
-import time
+import time, urllib2
 import oauth2
 def build_request(url, method='GET'):
     params = {                                            
