@@ -45,7 +45,7 @@ def api(api_name, path):
         gateway_response.headers[header] = api_response.getheader(header)
     
     log_data = dict(api=api_name, path=path, data=request.data, response=api_response_content)
-    log_entry = json.dump(log_data)
+    log_entry = json.dumps(log_data)
 
     pika_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
 
