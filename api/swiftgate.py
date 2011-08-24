@@ -25,7 +25,7 @@ app = Flask(__name__)
 pika_parameters = pika.ConnectionParameters('localhost')
 pika_connection = pika.BlockingConnection(pika_parameters)
 pika_channel = pika_connection.channel()
-pika_channel.queue_declare(queue='swiftgate', passive=True, durable=True)
+pika_channel.queue_declare(queue='swiftgate', durable=True)
  
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
