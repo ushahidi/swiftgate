@@ -8,7 +8,7 @@ Run the following at the command line:
 
 ## Manual
 
-1. Add the RabbitMQ public key to the trusted key list.
+1. Add the RabbitMQ public key to the trusted key list.  
 `wget -qO- http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -`
 
 2. Add the RabbitMQ repository to the sources.
