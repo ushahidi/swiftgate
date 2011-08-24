@@ -4,6 +4,11 @@
 
 Gateway for API management, rate limiting and billing.
 
+## Documentation
+
+* [Generic Installation Instructions](https://github.com/ushahidi/swiftgate/blob/master/doc/install.md)
+* [Debian 6.0 (Squeeze) Installation Instructions](https://github.com/ushahidi/swiftgate/blob/master/doc/debian.md)
+
 ## Licenses
 
 * All bundled source code is released under the [GNU Affero General Public License](http://www.gnu.org/licenses/agpl.html).
