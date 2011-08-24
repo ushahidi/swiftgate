@@ -11,7 +11,7 @@ Run the following at the command line:
 1. Add the RabbitMQ public key to the trusted key list.  
 `wget -qO- http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -`
 
-2. Add the RabbitMQ repository to the sources.
+2. Add the RabbitMQ repository to the sources.  
 `echo deb http://www.rabbitmq.com/debian/ testing main >> /etc/apt/sources.list`
 
 3. Install the necessary Debian packages.  
