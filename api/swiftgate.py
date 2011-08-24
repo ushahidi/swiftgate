@@ -46,14 +46,15 @@ def api(api_name, path):
     log_data = dict(api=api_name, path=path, data=request.data, response=api_response_content)
     log_entry = json.dump(log_data)
 
-    mq_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
+    pika_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
 
     return gateway_response
 
 def main():
-    mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
-    mq_channel = mq_connection.channel()
-    mq_channel.queue_declare(queue='swiftgate')
+    pika_parameters = pika.ConnectionParameters('localhost')
+    pika_connection = pika.BlockingConnection(pika_parameters)
+    pika_channel = pika_connection.channel()
+    pika_channel.queue_declare(queue='swiftgate')
 
     app.debug = True
     app.run(host='0.0.0.0')
