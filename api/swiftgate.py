@@ -21,6 +21,7 @@ from httplib import HTTPConnection
 import pika
  
 app = Flask(__name__)
+pika_channel = None
  
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
