@@ -18,6 +18,7 @@
 
 from flask import abort, Flask, make_response, request
 from httplib import HTTPConnection
+import pika
  
 app = Flask(__name__)
  
@@ -41,10 +42,19 @@ def api(api_name, path):
 
     for header in ['Cache-Control', 'Content-Type', 'Pragma']:
         gateway_response.headers[header] = api_response.getheader(header)
+    
+    log_data = dict(api=api_name, path=path, data=request.data, response=api_response_content)
+    log_entry = json.dump(log_data)
+    
+    mq_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
 
     return gateway_response
 
 def main():
+    mq_connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    mq_channel = mq_connection.channel()
+    mq_channel.queue_declare(queue='swiftgate')
+
     app.debug = True
     app.run(host='0.0.0.0')
 
