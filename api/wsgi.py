@@ -1,5 +1,5 @@
 # SwiftGate WSGI Handler
-# ===============================
+# ======================
 #
 # This file is part of SwiftGate.
 #
@@ -18,4 +18,4 @@
 
 import os, sys
 sys.path.append(os.path.dirname(__file__))
-from gateway import app as application
+from swiftgate import app as application
