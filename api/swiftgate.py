@@ -18,7 +18,7 @@
 
 from flask import abort, Flask, make_response, request
 from httplib import HTTPConnection
-import pika
+import json, pika
  
 app = Flask(__name__)
 pika_channel = None
