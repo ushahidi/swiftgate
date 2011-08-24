@@ -18,6 +18,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with SwiftGate.  If not, see <http://www.gnu.org/licenses/>.
 
+# Add the RabbitMQ public key to the trusted key list.
+wget -qO- http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
+
+# Add the RabbitMQ repository to the sources.
+echo deb http://www.rabbitmq.com/debian/ testing main >> /etc/apt/sources.list
+
 # Update the sources.
 apt-get update
 
