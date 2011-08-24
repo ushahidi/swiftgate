@@ -1,5 +1,5 @@
 # SwiftGate Controller
-# =============================
+# ====================
 #
 # This file is part of SwiftGate.
 #
@@ -45,7 +45,7 @@ def api(api_name, path):
     
     log_data = dict(api=api_name, path=path, data=request.data, response=api_response_content)
     log_entry = json.dump(log_data)
-    
+
     mq_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
 
     return gateway_response

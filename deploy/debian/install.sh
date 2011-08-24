@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# SwiftGate Debian Deployment Script
+# ==================================
+#
+# This file is part of SwiftGate.
+#
+# SwiftGate is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# SwiftGate is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with SwiftGate.  If not, see <http://www.gnu.org/licenses/>.
+
+# Update the sources.
+apt-get update
+
+# Upgrade the existing packages.
+apt-get upgrade -y
+
+# Install the necessary Debian packages.
+apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git
+
+# Install the necessary Python packages.
+pip install flask pika
+
+# Create a user for SwiftGate processes to run as.
+adduser --disabled-password --gecos "" swiftgate
+
+# Create a local clone of the application.
+git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
+
+# Replace the default Apache configuration with the bundled one.
+cp /var/www/swiftgate/deploy/debian/apache.conf /etc/apache2/sites-enabled/000-default
+
+# Tell Apache to reload its configuration.
+/etc/init.d/apache2 reload
+
+# Copy the example SwiftGate configuration file for customisation.
+cp /var/www/swiftgate/api/config.example.py /var/www/swiftgate/api/config.py
