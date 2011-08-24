@@ -21,7 +21,11 @@ from httplib import HTTPConnection
 import json, pika
  
 app = Flask(__name__)
-pika_channel = None
+
+pika_parameters = pika.ConnectionParameters('localhost')
+pika_connection = pika.BlockingConnection(pika_parameters)
+pika_channel = pika_connection.channel()
+pika_channel.queue_declare(queue='swiftgate')
  
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
@@ -52,11 +56,6 @@ def api(api_name, path):
     return gateway_response
 
 def main():
-    pika_parameters = pika.ConnectionParameters('localhost')
-    pika_connection = pika.BlockingConnection(pika_parameters)
-    pika_channel = pika_connection.channel()
-    pika_channel.queue_declare(queue='swiftgate')
-
     app.debug = True
     app.run(host='0.0.0.0')
 
