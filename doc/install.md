@@ -8,6 +8,7 @@
 * [Python 2.x](http://python.org/)
 * [python-memcached](http://www.tummy.com/Community/software/python-memcached/)
 * [Flask](http://flask.pocoo.org/)
+* [Pika](http://pika.github.com/)
 
 ## Apache Configuration
 

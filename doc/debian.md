@@ -36,7 +36,7 @@ rm -f /tmp/membase-server-community_x86_64_1.7.1.deb
 apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git
 
 10. Install the necessary Python packages.  
-pip install flask python-memcached
+pip install flask python-memcached pika
 
 11. Create a user for SwiftGate processes to run as.  
 adduser --disabled-password --gecos "" swiftgate
