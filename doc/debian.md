@@ -54,4 +54,6 @@ Run the following at the command line:
 
 ## Configuration
 
-1. Open `http://your.host:8091/` and configure Membase.
+1. Membase: `http://your.host:8091/`
+
+2. RabbitMQ: `http://your.host:55672/mgmt/`
