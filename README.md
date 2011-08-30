@@ -33,7 +33,6 @@ Gateway for API management, rate limiting and billing.
 ## Support
 
 * [SwiftRiver Mailing List](http://groups.google.com/group/swiftriver)
-* [#ushahidi on Freenode](http://irc.lc/freenode/ushahidi)
 
 ## See Also
 
