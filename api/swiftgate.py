@@ -18,10 +18,15 @@
 
 from flask import abort, Flask, make_response, request
 from httplib import HTTPConnection
-import json
+import json, pika
  
 app = Flask(__name__)
- 
+
+pika_parameters = pika.ConnectionParameters('localhost')
+pika_connection = pika.BlockingConnection(pika_parameters)
+pika_channel = pika_connection.channel()
+pika_channel.queue_declare(queue='swiftgate', durable=True)
+
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
     apis = {'silcc': 'www.opensilcc.com'}
@@ -42,6 +47,11 @@ def api(api_name, path):
 
     for header in ['Cache-Control', 'Content-Type', 'Pragma']:
         gateway_response.headers[header] = api_response.getheader(header)
+
+    log_data = dict(api=api_name, path=path, data=request.data, response=api_response_content)
+    log_entry = json.dumps(log_data)
+    
+    pika_channel.basic_publish(exchange='', routing_key='swiftgate', body=log_entry)
 
     return gateway_response
 
