@@ -21,7 +21,7 @@ Run the following at the command line:
 `apt-get upgrade -y`
 
 5. Download Membase.  
-`wget -o /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb`
+`wget -O /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb`
 
 6. Install Membase.  
 `dpkg -i /tmp/membase-server-community_x86_64_1.7.1.deb`
