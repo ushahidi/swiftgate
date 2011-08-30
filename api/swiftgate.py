@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with SwiftGate.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import abort, Flask, make_response, request
+from flask import abort, Flask, make_response, request, abort
 from httplib import HTTPConnection
-from scribe import scribe
-from thrift.transport import TTransport, TSocket
-from thrift.protocol import TBinaryProtocol
-import json, pika
+#from scribe import scribe
+#from thrift.transport import TTransport, TSocket
+#from thrift.protocol import TBinaryProtocol
+import json, pika, memcache
  
 app = Flask(__name__)
 
@@ -41,8 +41,16 @@ pika_connection = pika.BlockingConnection(pika_parameters)
 pika_channel = pika_connection.channel()
 pika_channel.queue_declare(queue='swiftgate', durable=True)
 
+membase = memcache.Client(['127.0.0.1:11211'])
+
 @app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
+    c = membase.incr(request.environ['REMOTE_ADDR'])
+    if c == None:
+        membase.set(request.environ['REMOTE_ADDR'], 1, 86400)
+    elif c > 50000:
+        abort(403)
+
     apis = {'silcc': 'www.opensilcc.com'}
     path = '/' + path
 
