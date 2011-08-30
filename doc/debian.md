@@ -1,12 +1,14 @@
-# SwiftGate Debian 6.0 (Squeeze) Installation Instructions
+# SwiftGate Debian 6.0 (Squeeze) Deployment Instructions
 
-## Automatic
+## Installation
+
+### Automatic
 
 Run the following at the command line:
 
 `wget -qO- --no-check-certificate https://raw.github.com/ushahidi/swiftgate/master/deploy/debian/install.sh | sudo bash`
 
-## Manual
+### Manual
 
 1. Add the RabbitMQ public key to the trusted key list.  
 `wget -qO- http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -`
@@ -49,3 +51,7 @@ Run the following at the command line:
 
 14. Tell Apache to reload its configuration.  
 `/etc/init.d/apache2 reload`
+
+## Configuration
+
+1. Open `http://your.host:8091/` and configure Membase.
