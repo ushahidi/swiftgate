@@ -7,12 +7,13 @@ Gateway for API management, rate limiting and billing.
 ## Dependencies
 
 * [Apache HTTP Server](http://httpd.apache.org/)
-* [mod_wsgi](http://code.google.com/p/modwsgi/)
+* [Membase Server](http://www.couchbase.org/)
 * [RabbitMQ](http://www.rabbitmq.com/)
 * [Python 2.x](http://python.org/)
-* [python-memcached](http://www.tummy.com/Community/software/python-memcached/)
+* [mod_wsgi](http://code.google.com/p/modwsgi/)
 * [Flask](http://flask.pocoo.org/)
 * [Pika](http://pika.github.com/)
+* [python-memcached](http://www.tummy.com/Community/software/python-memcached/)
 
 ## Apache Configuration
 
