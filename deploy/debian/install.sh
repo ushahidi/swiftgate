@@ -18,23 +18,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with SwiftGate.  If not, see <http://www.gnu.org/licenses/>.
 
-# Add the RabbitMQ public key to the trusted key list.
-wget -qO- http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
-
-# Add the RabbitMQ repository to the sources.
-echo deb http://www.rabbitmq.com/debian/ testing main >> /etc/apt/sources.list
-
 # Update the sources.
 apt-get update
 
 # Upgrade the existing packages.
 apt-get upgrade -y
 
-# Install the necessary Debian packages.
+# Download Membase.
+wget -o /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb
+
+# Install Membase.
+dpkg -i /tmp/membase-server-community_x86_64_1.7.1.deb
+
+# Install the missing dependencies.
+apt-get install -fy
+
+# Remove the Membase installer.
+rm -f /tmp/membase-server-community_x86_64_1.7.1.deb
+
+# Install the other necessary Debian packages.
 apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git
 
 # Install the necessary Python packages.
-pip install flask pika
+pip install flask python-memcached
 
 # Create a user for SwiftGate processes to run as.
 adduser --disabled-password --gecos "" swiftgate
@@ -47,6 +53,3 @@ cp /var/www/swiftgate/deploy/debian/apache.conf /etc/apache2/sites-enabled/000-d
 
 # Tell Apache to reload its configuration.
 /etc/init.d/apache2 reload
-
-# Copy the example SwiftGate configuration file for customisation.
-cp /var/www/swiftgate/api/config.example.py /var/www/swiftgate/api/config.py
