@@ -30,18 +30,6 @@ apt-get update
 # Upgrade the existing packages.
 apt-get upgrade -y
 
-# Download Membase.
-wget -O /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb
-
-# Install Membase.
-dpkg -i /tmp/membase-server-community_x86_64_1.7.1.deb
-
-# Install the missing dependencies.
-apt-get install -fy
-
-# Remove the Membase installer.
-rm -f /tmp/membase-server-community_x86_64_1.7.1.deb
-
 # Install the other necessary Debian packages.
 apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git
 
@@ -59,3 +47,15 @@ cp /var/www/swiftgate/deploy/debian/apache.conf /etc/apache2/sites-enabled/000-d
 
 # Tell Apache to reload its configuration.
 /etc/init.d/apache2 reload
+
+# Download Membase.
+wget -O /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb
+
+# Install Membase.
+dpkg -i /tmp/membase-server-community_x86_64_1.7.1.deb
+
+# Remove the Membase installer.
+rm -f /tmp/membase-server-community_x86_64_1.7.1.deb
+
+# Install the missing dependencies.
+apt-get install -fy
