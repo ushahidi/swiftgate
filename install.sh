@@ -43,7 +43,7 @@ adduser --disabled-password --gecos "" swiftgate
 git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 
 # Replace the default Apache configuration with the bundled one.
-cp /var/www/swiftgate/deploy/debian/apache.conf /etc/apache2/sites-enabled/000-default
+cp /var/www/swiftgate/config/apache.conf /etc/apache2/sites-enabled/000-default
 
 # Tell Apache to reload its configuration.
 /etc/init.d/apache2 reload
