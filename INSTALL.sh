@@ -43,7 +43,7 @@ adduser --disabled-password --gecos "" swiftgate
 git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 
 # Remove the default Apache configuration.
-rm /var/www/swiftgate/config/000-default
+rm /etc/apache2/sites-enabled/000-default
 
 # Copy the SwiftGate Apache configuration.
 cp /var/www/swiftgate/config/swiftgate.conf /etc/apache2/sites-enabled/
