@@ -26,9 +26,9 @@ Gateway for API management, rate limiting and billing.
 
 ## Configuration
 
-1. Membase: `http://your.host:8091/`
+* Membase `http://your.host:8091/`
 
-2. RabbitMQ: `http://your.host:55672/mgmt/`
+* RabbitMQ `http://your.host:55672/mgmt/`
 
 ## Licenses
 
