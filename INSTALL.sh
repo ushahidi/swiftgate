@@ -93,9 +93,6 @@ cd /tmp/thrift/contrib/fb303
 make
 make install
 
-# Remove Thrift Clone
-rm -rf /tmp/thrift
-
 # Clone Scribe
 git clone http://github.com/facebook/scribe.git /tmp/scribe
 
@@ -109,8 +106,9 @@ make install
 cd /tmp/scribe/lib/py
 python setup.py install
 
-# Remove Scribe Clone
-rm -rf /tmp/scribe
+# Clean Up
+cd ~
+rm -rf /tmp/thrift /tmp/scribe
 
 # Update Libraries
 ldconfig
