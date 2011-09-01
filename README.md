@@ -15,7 +15,11 @@ Gateway for API management, rate limiting and billing.
 * [Pika](http://pika.github.com/)
 * [python-memcached](http://www.tummy.com/Community/software/python-memcached/)
 
-## Ubuntu Installation
+## Installation
+
+### Platform
+
+We recommend using Ubuntu 11.04 as the base operating system.
 
 ### Automatic
 
