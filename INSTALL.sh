@@ -39,7 +39,7 @@ pip install flask python-memcached pika
 # Create a user for SwiftGate processes to run as
 adduser --disabled-password --gecos "" swiftgate
 
-# Create a local clone of the application.
+# Clone SwiftGate
 git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 
 # Remove the default Apache configuration
