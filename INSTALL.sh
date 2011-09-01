@@ -52,18 +52,18 @@ cp /var/www/swiftgate/config/swiftgate.conf /etc/apache2/sites-enabled/
 /etc/init.d/apache2 reload
 
 # Install RabbitMQ management plugins.
-wget -O /tmp/mochiweb-1.3-rmq2.5.1-git9a53dbd.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/mochiweb-1.3-rmq2.5.1-git9a53dbd.ez
-mv /tmp/mochiweb-1.3-rmq2.5.1-git9a53dbd.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-wget -O /tmp/webmachine-1.7.0-rmq2.5.1-hg0c4b60a.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/webmachine-1.7.0-rmq2.5.1-hg0c4b60a.ez
-mv /tmp/webmachine-1.7.0-rmq2.5.1-hg0c4b60a.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-wget -O /tmp/rabbitmq_mochiweb-2.5.1.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/rabbitmq_mochiweb-2.5.1.ez
-mv /tmp/rabbitmq_mochiweb-2.5.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-wget -O /tmp/amqp_client-2.5.1.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/amqp_client-2.5.1.ez
-mv /tmp/amqp_client-2.5.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-wget -O /tmp/rabbitmq_management_agent-2.5.1.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/rabbitmq_management_agent-2.5.1.ez
-mv /tmp/rabbitmq_management_agent-2.5.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-wget -O /tmp/rabbitmq_management-2.5.1.ez http://www.rabbitmq.com/releases/plugins/v2.5.1/rabbitmq_management-2.5.1.ez
-mv /tmp/rabbitmq_management-2.5.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/mochiweb-1.3-rmq2.6.0-git9a53dbd.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/mochiweb-1.3-rmq2.6.0-git9a53dbd.ez
+mv /tmp/mochiweb-1.3-rmq2.6.0-git9a53dbd.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/webmachine-1.7.0-rmq2.6.0-hg0c4b60a.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/webmachine-1.7.0-rmq2.6.0-hg0c4b60a.ez
+mv /tmp/webmachine-1.7.0-rmq2.6.0-hg0c4b60a.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/rabbitmq_mochiweb-2.6.0.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/rabbitmq_mochiweb-2.6.0.ez
+mv /tmp/rabbitmq_mochiweb-2.6.0.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/amqp_client-2.6.0.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/amqp_client-2.6.0.ez
+mv /tmp/amqp_client-2.6.0.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/rabbitmq_management_agent-2.6.0.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/rabbitmq_management_agent-2.6.0.ez
+mv /tmp/rabbitmq_management_agent-2.6.0.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
+wget -O /tmp/rabbitmq_management-2.6.0.ez http://www.rabbitmq.com/releases/plugins/v2.6.0/rabbitmq_management-2.6.0.ez
+mv /tmp/rabbitmq_management-2.6.0.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
 
 # Create RabbitMQ administrative user.
 rabbitmqctl add_user swiftgate swiftgate
