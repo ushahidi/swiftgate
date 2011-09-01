@@ -43,7 +43,7 @@ adduser --disabled-password --gecos "" swiftgate
 git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 
 # Replace the default Apache configuration with the bundled one.
-cp /var/www/swiftgate/config/apache.conf /etc/apache2/sites-enabled/000-default
+cp /var/www/swiftgate/config/000-default /etc/apache2/sites-enabled/
 
 # Tell Apache to reload its configuration.
 /etc/init.d/apache2 reload
@@ -77,6 +77,3 @@ dpkg -i /tmp/membase-server-community_x86_64_1.7.1.deb
 
 # Remove the Membase installer.
 rm -f /tmp/membase-server-community_x86_64_1.7.1.deb
-
-# Install the missing dependencies.
-apt-get install -fy
