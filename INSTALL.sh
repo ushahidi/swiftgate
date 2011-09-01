@@ -67,7 +67,10 @@ mv /tmp/rabbitmq_management-2.5.1.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plu
 
 # Create RabbitMQ administrative user.
 rabbitmqctl add_user swiftgate swiftgate
-rabbitmqctl set_admin swiftgate
+rabbitmqctl set_user_tags swiftgate administrator
+
+# Delete RabbitMQ guest user.
+rabbitmqctl delete_user guest
 
 # Reload RabbitMQ.
 /etc/init.d/rabbitmq-server reload
