@@ -32,8 +32,7 @@ Gateway for API management, rate limiting and billing.
 
 ## Licenses
 
-* All bundled source code is released under the [GNU Affero General Public License](http://www.gnu.org/licenses/agpl.html).
-* All bundled documentation is released under the [GNU Free Documentation License](http://www.gnu.org/licenses/fdl.html).
+* [GNU Affero General Public License](http://www.gnu.org/licenses/agpl.html).
 
 ## Support
 
