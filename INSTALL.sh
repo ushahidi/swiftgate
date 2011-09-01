@@ -46,7 +46,7 @@ git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 rm /etc/apache2/sites-enabled/000-default
 
 # Copy the SwiftGate Apache configuration.
-cp /var/www/swiftgate/config/swiftgate.conf /etc/apache2/sites-enabled/
+cp /var/www/swiftgate/config/apache.conf /etc/apache2/sites-enabled/swiftgate.conf
 
 # Tell Apache to reload its configuration.
 /etc/init.d/apache2 reload
