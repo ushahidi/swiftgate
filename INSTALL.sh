@@ -31,7 +31,7 @@ apt-get update
 apt-get upgrade -y
 
 # Install the other necessary Debian packages.
-apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git
+apt-get install -y apache2 libapache2-mod-wsgi python-pip rabbitmq-server git libboost-dev libevent-dev python-dev automake pkg-config libtool flex bison ant openjdk-6-jdk bjam libboost-all-dev build-essential psmisc
 
 # Install the necessary Python packages.
 pip install flask python-memcached pika
@@ -71,6 +71,49 @@ rabbitmqctl set_user_tags swiftgate administrator
 
 # Reload RabbitMQ.
 /etc/init.d/rabbitmq-server reload
+
+# Clone Thrift
+git clone git://git.apache.org/thrift.git /tmp/thrift
+
+# Install Thrift
+cd /tmp/thrift
+./bootstrap.sh
+./configure
+make
+make install
+
+# Install Thrift Python Library
+cd /tmp/thrift/lib/py
+python setup.py install
+
+# Install fb303 Library
+cd /tmp/thrift/contrib/fb303
+./bootstrap.sh
+./configure
+make
+make install
+
+# Remove Thrift Clone
+rm -rf /tmp/thrift
+
+# Clone Scribe
+git clone http://github.com/facebook/scribe.git /tmp/scribe
+
+# Install Scribe
+cd /tmp/scribe
+./bootstrap.sh
+make
+make install
+
+# Install Scribe Python Library
+cd /tmp/scribe/lib/py
+python setup.py install
+
+# Remove Scribe Clone
+rm -rf /tmp/scribe
+
+# Update Libraries
+ldconfig
 
 # Download Membase.
 wget -O /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb
