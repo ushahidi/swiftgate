@@ -4,7 +4,7 @@
 
 Gateway for API management, rate limiting and billing.
 
-## Operating Systems
+## Supported Operating Systems
 
 * [Debian 6.0](http://www.debian.org/)
 * [Ubuntu 11.04](http://www.ubuntu.com/)
