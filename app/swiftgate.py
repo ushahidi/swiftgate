@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with SwiftGate.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+sys.path.append('/usr/lib/python2.7/site-packages/')
+
 from flask import abort, Flask, make_response, request, abort
 from httplib import HTTPConnection
 #from scribe import scribe
