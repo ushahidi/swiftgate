@@ -113,8 +113,13 @@ rm -rf /tmp/thrift /tmp/scribe
 # Update Libraries
 ldconfig
 
-# Run Scribe
-scribed -p 1463 -c /var/www/swiftgate/config/scribe.conf &
+# Install Scribe Startup Script
+cp /var/www/swiftgate/config/scribe.sh /etc/init.d/scribe
+chmod +x /etc/init.d/scribe
+update-rc.d scribe defaults
+
+# Start Scribe
+/etc/init.d/scribe start
 
 # Download Membase
 wget -O /tmp/membase-server-community_x86_64_1.7.1.deb http://packages.couchbase.com/releases/1.7.1/membase-server-community_x86_64_1.7.1.deb
