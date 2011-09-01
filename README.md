@@ -19,11 +19,12 @@ Gateway for API management, rate limiting and billing.
 
 ### Platform
 
-We recommend using Ubuntu 11.04 as the base operating system.
+Recommended operating systems:
+
+* Debian 6.0
+* Ubuntu 11.04
 
 ### Automatic
-
-Run the following at the command line:
 
 `wget -qO- --no-check-certificate https://raw.github.com/ushahidi/swiftgate/master/deploy/debian/install.sh | sudo bash`
 
