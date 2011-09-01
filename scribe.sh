@@ -1,4 +1,4 @@
-apt-get install libboost-dev libevent-dev python-dev automake pkg-config libtool flex bison ant openjdk-6-jdk bjam libboost-all-dev build-essential
+apt-get install libboost-dev libevent-dev python-dev automake pkg-config libtool flex bison ant openjdk-6-jdk bjam libboost-all-dev build-essential psmisc
 
 git clone git://git.apache.org/thrift.git /tmp/thrift
 cd /tmp/thrift
