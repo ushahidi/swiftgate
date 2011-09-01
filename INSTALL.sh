@@ -114,7 +114,7 @@ rm -rf /tmp/thrift /tmp/scribe
 ldconfig
 
 # Install Scribe Startup Script
-cp /var/www/swiftgate/config/scribe.sh /etc/init.d/scribe
+cp /var/www/swiftgate/scripts/scribe.sh /etc/init.d/scribe
 chmod +x /etc/init.d/scribe
 update-rc.d scribe defaults
 
