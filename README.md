@@ -4,6 +4,11 @@
 
 Gateway for API management, rate limiting and billing.
 
+## Operating Systems
+
+* Debian 6.0
+* Ubuntu 11.04
+
 ## Dependencies
 
 * [Apache HTTP Server](http://httpd.apache.org/)
@@ -16,13 +21,6 @@ Gateway for API management, rate limiting and billing.
 * [python-memcached](http://www.tummy.com/Community/software/python-memcached/)
 
 ## Installation
-
-### Platform
-
-Recommended operating systems:
-
-* Debian 6.0
-* Ubuntu 11.04
 
 ### Automatic
 
@@ -72,21 +70,11 @@ Recommended operating systems:
 14. Tell Apache to reload its configuration.  
 `/etc/init.d/apache2 reload`
 
-## Post-Install Configuration
+## Configuration
 
 1. Membase: `http://your.host:8091/`
 
 2. RabbitMQ: `http://your.host:55672/mgmt/`
-
-## Apache Configuration
-
-    <VirtualHost *:80>
-     WSGIDaemonProcess swiftgate user=swiftgate group=swiftgate threads=5
-     WSGIScriptAlias / /var/www/swiftgate/api/wsgi.py
-    </VirtualHost>
-
-* If your application is installed in a different directory than `/var/www/swiftgate`, remember to modify the path accordingly.
-* You need a user set up for the SwiftGate process to run as. In the above, we assume both the user and group will be `swiftgate`.
 
 ## Licenses
 
