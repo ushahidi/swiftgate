@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# SwiftGate Debian Deployment Script
-# ==================================
+# SwiftGate Deployment Script
+# ===========================
 #
 # This file is part of SwiftGate.
 #
