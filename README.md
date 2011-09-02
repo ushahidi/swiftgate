@@ -33,7 +33,7 @@ Gateway for API management, rate limiting and billing.
     * Username: `swiftgate`
     * Password: `swiftgate`
 
-## Licenses
+## License
 
 * [GNU Affero General Public License](http://www.gnu.org/licenses/agpl.html)
 
