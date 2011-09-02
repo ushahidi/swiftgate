@@ -22,7 +22,7 @@ Gateway for API management, rate limiting and billing.
 
 ## Installation
 
-`wget -qO- --no-check-certificate https://raw.github.com/ushahidi/swiftgate/master/INSTALL.sh | sudo bash`
+`wget -qO- --no-check-certificate https://raw.github.com/ushahidi/swiftgate/master/scripts/install.sh | sudo bash`
 
 ## Configuration
 
