@@ -26,7 +26,7 @@ from thrift.transport import TTransport, TSocket
 from thrift.protocol import TBinaryProtocol
 import json, pika, memcache
  
-app = Flask(__name__)
+application = Flask(__name__)
 
 log_entry = scribe.LogEntry('swiftgate', 'Started Up')
 socket = TSocket.TSocket(host='localhost', port=1463)
@@ -44,7 +44,7 @@ pika_channel.queue_declare(queue='swiftgate', durable=True)
 
 membase = memcache.Client(['127.0.0.1:11211'])
 
-@app.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
+@application.route('/<api_name>/<path:path>', methods=['GET', 'POST'])
 def api(api_name, path):
     c = membase.incr(request.environ['REMOTE_ADDR'])
     if c == None:
@@ -79,8 +79,8 @@ def api(api_name, path):
     return gateway_response
 
 def main():
-    app.debug = True
-    app.run(host='0.0.0.0')
+    application.debug = True
+    application.run(host='0.0.0.0')
 
 if __name__ == '__main__':
     main()
