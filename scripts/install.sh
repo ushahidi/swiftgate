@@ -42,6 +42,17 @@ adduser --disabled-password --gecos "" swiftgate
 # Clone SwiftGate
 git clone https://github.com/ushahidi/swiftgate.git /var/www/swiftgate
 
+# Copy Firewall Configuration
+cp /var/www/swiftgate/config/firewall.conf /etc/firewall.conf
+
+# Install Firewall Startup Script
+cp /var/www/swiftgate/scripts/firewall.sh /etc/init.d/firewall
+chmod +x /etc/init.d/firewall
+update-rc.d firewall defaults
+
+# Start Firewall
+/etc/init.d/firewall start
+
 # Remove the default Apache configuration
 rm /etc/apache2/sites-enabled/000-default
 
