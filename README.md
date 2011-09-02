@@ -26,9 +26,12 @@ Gateway for API management, rate limiting and billing.
 
 ## Configuration
 
-* Membase `http://your.host:8091/`
-
-* RabbitMQ `http://your.host:55672/mgmt/`
+* Membase
+    * URL: `http://localhost:8091/`
+* RabbitMQ
+    * URL: `http://localhost:55672/mgmt/`
+    * Username: `swiftgate`
+    * Password: `swiftgate`
 
 ## Licenses
 
